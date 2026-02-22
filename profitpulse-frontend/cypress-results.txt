@@ -1,0 +1,433 @@
+
+
+DevTools listening on ws://127.0.0.1:57534/devtools/browser/0b3f8a91-26c6-4994-8deb-3412da9bec21
+Warning: The allowCypressEnv configuration option is enabled. This allows any browser code to read values from Cypress.env(). This is insecure and will be removed in a future major version.
+
+1. Replace Cypress.env() calls with cy.env() (for sensitive values) or Cypress.expose() (for public configuration)
+2. Set allowCypressEnv: false in your Cypress configuration to disable Cypress.env()
+
+Learn more: https://on.cypress.io/cypress-env-migration
+
+
+====================================================================================================
+
+  (Run Starting)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Cypress:        15.10.0                                                                        │
+  │ Browser:        Electron 138 (headless)                                                        │
+  │ Node Version:   v24.13.1 (C:\nvm4w\nodejs\node.exe)                                            │
+  │ Specs:          7 found (admin.cy.js, auth.cy.js, dashboards.cy.js, data-management.cy.js, exe │
+  │                 cutive-dashboard.cy.js, rbac.cy.js, upload.cy.js)                              │
+  │ Searched:       cypress/e2e/**/*.cy.{js,jsx,ts,tsx}                                            │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+                                                                                                    
+  Running:  admin.cy.js                                                                     (1 of 7)
+
+
+  Admin Routes
+    1) Admin sees all admin pages
+    √ HR User cannot see admin menu (2472ms)
+
+
+  1 passing (10s)
+  1 failing
+
+  1) Admin Routes
+       Admin sees all admin pages:
+     AssertionError: Timed out retrying after 4000ms: expected 'http://localhost:3000/login' to include '/admin/users'
+      at Context.eval (webpack://profitpulse-frontend/./cypress/e2e/admin.cy.js:10:17)
+
+
+
+
+  (Results)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Tests:        2                                                                                │
+  │ Passing:      1                                                                                │
+  │ Failing:      1                                                                                │
+  │ Pending:      0                                                                                │
+  │ Skipped:      0                                                                                │
+  │ Screenshots:  1                                                                                │
+  │ Video:        false                                                                            │
+  │ Duration:     10 seconds                                                                       │
+  │ Spec Ran:     admin.cy.js                                                                      │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+  (Screenshots)
+
+  -  C:\profitpulse\profitpulse-frontend\cypress\screenshots\admin.cy.js\Admin Routes     (1280x720)
+      -- Admin sees all admin pages (failed).png                                                    
+
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+                                                                                                    
+  Running:  auth.cy.js                                                                      (2 of 7)
+
+
+  Auth Flows
+    √ Login with valid admin credentials → verify redirect to Executive Dashboard (2074ms)
+    1) Login with wrong password → verify error message
+    2) Login with each role → verify correct redirect
+    √ Access protected route without login → verify redirect to /login (353ms)
+
+
+  2 passing (19s)
+  2 failing
+
+  1) Auth Flows
+       Login with wrong password → verify error message:
+     AssertionError: Timed out retrying after 4000ms: Expected to find content: 'Invalid email or password' but never did.
+      at Context.eval (webpack://profitpulse-frontend/./cypress/e2e/auth.cy.js:23:49)
+
+  2) Auth Flows
+       Login with each role → verify correct redirect:
+     AssertionError: Timed out retrying after 4000ms: expected 'http://localhost:3000/403' to include '/dashboard/department'
+      at eval (webpack://profitpulse-frontend/./cypress/e2e/auth.cy.js:43:21)
+  at Array.forEach (<anonymous>)
+      at Context.eval (webpack://profitpulse-frontend/./cypress/e2e/auth.cy.js:35:14)
+
+
+
+
+  (Results)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Tests:        4                                                                                │
+  │ Passing:      2                                                                                │
+  │ Failing:      2                                                                                │
+  │ Pending:      0                                                                                │
+  │ Skipped:      0                                                                                │
+  │ Screenshots:  2                                                                                │
+  │ Video:        false                                                                            │
+  │ Duration:     18 seconds                                                                       │
+  │ Spec Ran:     auth.cy.js                                                                       │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+  (Screenshots)
+
+  -  C:\profitpulse\profitpulse-frontend\cypress\screenshots\auth.cy.js\Auth Flows --     (1280x720)
+      Login with wrong password → verify error message (failed).png                                 
+  -  C:\profitpulse\profitpulse-frontend\cypress\screenshots\auth.cy.js\Auth Flows --     (1280x720)
+      Login with each role → verify correct redirect (failed).png                                   
+
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+                                                                                                    
+  Running:  dashboards.cy.js                                                                (3 of 7)
+
+
+  Other Dashboards
+    1) Admin explores all dashboards
+    2) Login as Dept Head -> Employee Dashboard shows ONLY Engineering employees
+    3) Login as Delivery Mgr -> Project Dashboard shows assigned projects
+
+
+  0 passing (20s)
+  3 failing
+
+  1) Other Dashboards
+       Admin explores all dashboards:
+     AssertionError: Timed out retrying after 4000ms: Expected to find content: 'Employee Dashboard' but never did.
+      at Context.eval (webpack://profitpulse-frontend/./cypress/e2e/dashboards.cy.js:5:11)
+
+  2) Other Dashboards
+       Login as Dept Head -> Employee Dashboard shows ONLY Engineering employees:
+     AssertionError: Timed out retrying after 4000ms: Expected to find content: 'Employee Dashboard' but never did.
+      at Context.eval (webpack://profitpulse-frontend/./cypress/e2e/dashboards.cy.js:25:11)
+
+  3) Other Dashboards
+       Login as Delivery Mgr -> Project Dashboard shows assigned projects:
+     AssertionError: Timed out retrying after 4000ms: expected 'http://localhost:3000/dashboard/project' to include '/dashboard/projects'
+      at Context.eval (webpack://profitpulse-frontend/./cypress/e2e/dashboards.cy.js:33:17)
+
+
+
+
+  (Results)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Tests:        3                                                                                │
+  │ Passing:      0                                                                                │
+  │ Failing:      3                                                                                │
+  │ Pending:      0                                                                                │
+  │ Skipped:      0                                                                                │
+  │ Screenshots:  3                                                                                │
+  │ Video:        false                                                                            │
+  │ Duration:     20 seconds                                                                       │
+  │ Spec Ran:     dashboards.cy.js                                                                 │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+  (Screenshots)
+
+  -  C:\profitpulse\profitpulse-frontend\cypress\screenshots\dashboards.cy.js\Other D     (1280x720)
+     ashboards -- Admin explores all dashboards (failed).png                                        
+  -  C:\profitpulse\profitpulse-frontend\cypress\screenshots\dashboards.cy.js\Other D     (1280x720)
+     ashboards -- Login as Dept Head - Employee Dashboard shows ONLY Engineering empl               
+     oyees (failed).png                                                                             
+  -  C:\profitpulse\profitpulse-frontend\cypress\screenshots\dashboards.cy.js\Other D     (1280x720)
+     ashboards -- Login as Delivery Mgr - Project Dashboard shows assigned projects (               
+     failed).png                                                                                    
+
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+                                                                                                    
+  Running:  data-management.cy.js                                                           (4 of 7)
+
+
+  Data Management
+    1) Navigate to /employees → verify 40 employees in table
+    2) Navigate to /projects → verify projects listed
+
+
+  0 passing (12s)
+  2 failing
+
+  1) Data Management
+       Navigate to /employees → verify 40 employees in table:
+     AssertionError: Timed out retrying after 4000ms: Expected to find content: 'Data Management' but never did.
+      at Context.eval (webpack://profitpulse-frontend/./cypress/e2e/data-management.cy.js:8:11)
+
+  2) Data Management
+       Navigate to /projects → verify projects listed:
+     AssertionError: Timed out retrying after 4000ms: Expected to find content: 'Data Management' but never did.
+      at Context.eval (webpack://profitpulse-frontend/./cypress/e2e/data-management.cy.js:27:11)
+
+
+
+
+  (Results)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Tests:        2                                                                                │
+  │ Passing:      0                                                                                │
+  │ Failing:      2                                                                                │
+  │ Pending:      0                                                                                │
+  │ Skipped:      0                                                                                │
+  │ Screenshots:  2                                                                                │
+  │ Video:        false                                                                            │
+  │ Duration:     11 seconds                                                                       │
+  │ Spec Ran:     data-management.cy.js                                                            │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+  (Screenshots)
+
+  -  C:\profitpulse\profitpulse-frontend\cypress\screenshots\data-management.cy.js\Da     (1280x720)
+     ta Management -- Navigate to employees → verify 40 employees in table (failed).p               
+     ng                                                                                             
+  -  C:\profitpulse\profitpulse-frontend\cypress\screenshots\data-management.cy.js\Da     (1280x720)
+     ta Management -- Navigate to projects → verify projects listed (failed).png                    
+
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+                                                                                                    
+  Running:  executive-dashboard.cy.js                                                       (5 of 7)
+
+
+  Executive Dashboard
+    1) "before each" hook for "Verify 4 KPI cards are visible and show non-zero values"
+
+
+  0 passing (7s)
+  1 failing
+
+  1) Executive Dashboard
+       "before each" hook for "Verify 4 KPI cards are visible and show non-zero values":
+     CypressError: Timed out retrying after 5000ms: `cy.wait()` timed out waiting `5000ms` for the 1st request to the route: `execData`. No request ever occurred.
+
+https://on.cypress.io/wait
+
+Because this error occurred during a `before each` hook we are skipping the remaining tests in the current suite: `Executive Dashboard`
+      at cypressErr (http://localhost:3000/__cypress/runner/cypress_runner.js:78300:18)
+      at Object.errByPath (http://localhost:3000/__cypress/runner/cypress_runner.js:78368:10)
+      at checkForXhr (http://localhost:3000/__cypress/runner/cypress_runner.js:138931:84)
+      at <unknown> (http://localhost:3000/__cypress/runner/cypress_runner.js:138956:28)
+      at tryCatcher (http://localhost:3000/__cypress/runner/cypress_runner.js:1777:23)
+      at Promise.attempt.Promise.try (http://localhost:3000/__cypress/runner/cypress_runner.js:4285:29)
+      at whenStable (http://localhost:3000/__cypress/runner/cypress_runner.js:152023:68)
+      at <unknown> (http://localhost:3000/__cypress/runner/cypress_runner.js:151964:14)
+      at tryCatcher (http://localhost:3000/__cypress/runner/cypress_runner.js:1777:23)
+      at Promise._settlePromiseFromHandler (http://localhost:3000/__cypress/runner/cypress_runner.js:1489:31)
+      at Promise._settlePromise (http://localhost:3000/__cypress/runner/cypress_runner.js:1546:18)
+      at Promise._settlePromise0 (http://localhost:3000/__cypress/runner/cypress_runner.js:1591:10)
+      at Promise._settlePromises (http://localhost:3000/__cypress/runner/cypress_runner.js:1671:18)
+      at Promise._fulfill (http://localhost:3000/__cypress/runner/cypress_runner.js:1615:18)
+      at <unknown> (http://localhost:3000/__cypress/runner/cypress_runner.js:5420:46)
+  From Your Spec Code:
+      at Object.proxyGetter [as get] (http://localhost:3000/__cypress/runner/cypress_runner.js:81087:22)
+      at exists (http://localhost:3000/__cypress/runner/cypress_runner.js:151211:26)
+      at elExists (http://localhost:3000/__cypress/runner/cypress_runner.js:151226:10)
+      at ensureExistence (http://localhost:3000/__cypress/runner/cypress_runner.js:151407:22)
+      at onFailFn (http://localhost:3000/__cypress/runner/cypress_runner.js:151436:53)
+
+
+
+
+  (Results)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Tests:        5                                                                                │
+  │ Passing:      0                                                                                │
+  │ Failing:      1                                                                                │
+  │ Pending:      0                                                                                │
+  │ Skipped:      4                                                                                │
+  │ Screenshots:  1                                                                                │
+  │ Video:        false                                                                            │
+  │ Duration:     7 seconds                                                                        │
+  │ Spec Ran:     executive-dashboard.cy.js                                                        │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+  (Screenshots)
+
+  -  C:\profitpulse\profitpulse-frontend\cypress\screenshots\executive-dashboard.cy.j     (1280x720)
+     s\Executive Dashboard -- Verify 4 KPI cards are visible and show non-zero values               
+      -- before each hook (failed).png                                                              
+
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+                                                                                                    
+  Running:  rbac.cy.js                                                                      (6 of 7)
+
+
+  RBAC Verification
+    1) Finance Dashboard Access
+    √ HR Dashboard Access (4041ms)
+    2) Delivery Mgr Dashboard Access
+    3) Dept Head Dashboard Access
+
+
+  1 passing (25s)
+  3 failing
+
+  1) RBAC Verification
+       Finance Dashboard Access:
+     AssertionError: Timed out retrying after 4000ms: Expected to find content: 'Project Dashboard' but never did.
+      at Context.eval (webpack://profitpulse-frontend/./cypress/e2e/rbac.cy.js:10:41)
+
+  2) RBAC Verification
+       Delivery Mgr Dashboard Access:
+     AssertionError: Timed out retrying after 4000ms: expected 'http://localhost:3000/dashboard/project' to include '/dashboard/projects'
+      at Context.eval (webpack://profitpulse-frontend/./cypress/e2e/rbac.cy.js:26:17)
+
+  3) RBAC Verification
+       Dept Head Dashboard Access:
+     AssertionError: Timed out retrying after 4000ms: expected 'http://localhost:3000/403' to include '/dashboard/departments'
+      at Context.eval (webpack://profitpulse-frontend/./cypress/e2e/rbac.cy.js:34:17)
+
+
+
+
+  (Results)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Tests:        4                                                                                │
+  │ Passing:      1                                                                                │
+  │ Failing:      3                                                                                │
+  │ Pending:      0                                                                                │
+  │ Skipped:      0                                                                                │
+  │ Screenshots:  3                                                                                │
+  │ Video:        false                                                                            │
+  │ Duration:     24 seconds                                                                       │
+  │ Spec Ran:     rbac.cy.js                                                                       │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+  (Screenshots)
+
+  -  C:\profitpulse\profitpulse-frontend\cypress\screenshots\rbac.cy.js\RBAC Verifica     (1280x720)
+     tion -- Finance Dashboard Access (failed).png                                                  
+  -  C:\profitpulse\profitpulse-frontend\cypress\screenshots\rbac.cy.js\RBAC Verifica     (1280x720)
+     tion -- Delivery Mgr Dashboard Access (failed).png                                             
+  -  C:\profitpulse\profitpulse-frontend\cypress\screenshots\rbac.cy.js\RBAC Verifica     (1280x720)
+     tion -- Dept Head Dashboard Access (failed).png                                                
+
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+                                                                                                    
+  Running:  upload.cy.js                                                                    (7 of 7)
+
+
+  Upload Center
+    1) Verify type selection options
+    2) Click Download Template
+    3) Upload demo verification flow
+
+
+  0 passing (18s)
+  3 failing
+
+  1) Upload Center
+       Verify type selection options:
+     AssertionError: Timed out retrying after 4000ms: Expected to find content: 'Upload Center' but never did.
+      at Context.eval (webpack://profitpulse-frontend/./cypress/e2e/upload.cy.js:9:37)
+
+  2) Upload Center
+       Click Download Template:
+     AssertionError: Timed out retrying after 4000ms: Expected to find element: `.ant-select-selector`, but never found it.
+      at Context.eval (webpack://profitpulse-frontend/./cypress/e2e/upload.cy.js:17:11)
+
+  3) Upload Center
+       Upload demo verification flow:
+     AssertionError: Timed out retrying after 4000ms: Expected to find element: `.ant-select-selector`, but never found it.
+      at Context.eval (webpack://profitpulse-frontend/./cypress/e2e/upload.cy.js:31:11)
+
+
+
+
+  (Results)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Tests:        3                                                                                │
+  │ Passing:      0                                                                                │
+  │ Failing:      3                                                                                │
+  │ Pending:      0                                                                                │
+  │ Skipped:      0                                                                                │
+  │ Screenshots:  3                                                                                │
+  │ Video:        false                                                                            │
+  │ Duration:     17 seconds                                                                       │
+  │ Spec Ran:     upload.cy.js                                                                     │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+  (Screenshots)
+
+  -  C:\profitpulse\profitpulse-frontend\cypress\screenshots\upload.cy.js\Upload Cent     (1280x720)
+     er -- Verify type selection options (failed).png                                               
+  -  C:\profitpulse\profitpulse-frontend\cypress\screenshots\upload.cy.js\Upload Cent     (1280x720)
+     er -- Click Download Template (failed).png                                                     
+  -  C:\profitpulse\profitpulse-frontend\cypress\screenshots\upload.cy.js\Upload Cent     (1280x720)
+     er -- Upload demo verification flow (failed).png                                               
+
+
+====================================================================================================
+
+  (Run Finished)
+
+
+       Spec                                              Tests  Passing  Failing  Pending  Skipped  
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ ✖  admin.cy.js                              00:10        2        1        1        -        - │
+  ├────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ ✖  auth.cy.js                               00:18        4        2        2        -        - │
+  ├────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ ✖  dashboards.cy.js                         00:20        3        -        3        -        - │
+  ├────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ ✖  data-management.cy.js                    00:11        2        -        2        -        - │
+  ├────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ ✖  executive-dashboard.cy.js                00:07        5        -        1        -        4 │
+  ├────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ ✖  rbac.cy.js                               00:24        4        1        3        -        - │
+  ├────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ ✖  upload.cy.js                             00:17        3        -        3        -        - │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+    ✖  7 of 7 failed (100%)                     01:50       23        4       15        -        4  
+

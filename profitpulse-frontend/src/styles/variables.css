@@ -1,0 +1,50 @@
+:root {
+    /* CORE COLORS */
+    --color-primary-brand: #0F172A;
+    --color-primary-action: #3B82F6;
+    --color-primary-hover: #2563EB;
+
+    --color-profit: #10B981;
+    --color-profit-bg: #ECFDF5;
+
+    --color-loss: #EF4444;
+    --color-loss-bg: #FEF2F2;
+
+    --color-warning: #F59E0B;
+    --color-warning-bg: #FFFBEB;
+
+    --color-info: #6366F1;
+
+    /* SURFACE COLORS */
+    --color-page-bg: #F8FAFC;
+    --color-card-bg: #FFFFFF;
+    --color-card-border: #E2E8F0;
+
+    /* TEXT COLORS */
+    --color-text-primary: #0F172A;
+    --color-text-secondary: #475569;
+    --color-text-muted: #94A3B8;
+    --color-text-on-dark: #F1F5F9;
+
+    /* SIDEBAR */
+    --color-sidebar-bg: #0F172A;
+    --color-sidebar-text: #CBD5E1;
+    --color-sidebar-active-bg: #1E293B;
+    --color-sidebar-active-text: #FFFFFF;
+    --color-sidebar-accent: #3B82F6;
+
+    /* TYPOGRAPHY */
+    --font-family-base: 'DM Sans', -apple-system, sans-serif;
+
+    /* SHADOWS */
+    --shadow-card-default: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.06);
+    --shadow-card-hover: 0 4px 12px rgba(0, 0, 0, 0.08);
+    --shadow-dropdown: 0 8px 30px rgba(0, 0, 0, 0.12);
+    --shadow-sidebar: 2px 0 8px rgba(0, 0, 0, 0.08);
+
+    /* BORDER RADIUS */
+    --radius-card: 12px;
+    --radius-button: 8px;
+    --radius-input: 8px;
+    --radius-badge: 6px;
+}

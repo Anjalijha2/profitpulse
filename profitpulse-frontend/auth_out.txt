@@ -1,0 +1,103 @@
+
+
+DevTools listening on ws://127.0.0.1:55066/devtools/browser/a7212880-08bc-41ba-a236-ca8052b5c294
+Warning: The allowCypressEnv configuration option is enabled. This allows any browser code to read values from Cypress.env(). This is insecure and will be removed in a future major version.
+
+1. Replace Cypress.env() calls with cy.env() (for sensitive values) or Cypress.expose() (for public configuration)
+2. Set allowCypressEnv: false in your Cypress configuration to disable Cypress.env()
+
+Learn more: https://on.cypress.io/cypress-env-migration
+
+
+====================================================================================================
+
+  (Run Starting)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Cypress:        15.10.0                                                                        │
+  │ Browser:        Electron 138 (headless)                                                        │
+  │ Node Version:   v24.13.1 (C:\nvm4w\nodejs\node.exe)                                            │
+  │ Specs:          1 found (auth.cy.js)                                                           │
+  │ Searched:       C:\profitpulse\profitpulse-frontend\cypress\e2e\auth.cy.js                     │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+                                                                                                    
+  Running:  auth.cy.js                                                                      (1 of 1)
+
+
+  Auth Flows
+    1) Login with valid admin credentials → verify redirect to Executive Dashboard
+    2) Login with wrong password → verify error message
+    3) Login with each role → verify correct redirect
+    4) Access protected route without login → verify redirect to /login
+
+
+  0 passing (21s)
+  4 failing
+
+  1) Auth Flows
+       Login with valid admin credentials → verify redirect to Executive Dashboard:
+     AssertionError: Timed out retrying after 4000ms: Expected to find element: `input[type="email"]`, but never found it.
+      at Context.eval (webpack://profitpulse-frontend/./cypress/e2e/auth.cy.js:9:11)
+
+  2) Auth Flows
+       Login with wrong password → verify error message:
+     AssertionError: Timed out retrying after 4000ms: Expected to find content: 'Invalid email or password' but never did.
+      at Context.eval (webpack://profitpulse-frontend/./cypress/e2e/auth.cy.js:23:49)
+
+  3) Auth Flows
+       Login with each role → verify correct redirect:
+     AssertionError: Timed out retrying after 4000ms: Expected to find content: 'Logout' but never did.
+      at eval (webpack://profitpulse-frontend/./cypress/e2e/auth.cy.js:45:15)
+  at Array.forEach (<anonymous>)
+      at Context.eval (webpack://profitpulse-frontend/./cypress/e2e/auth.cy.js:35:14)
+
+  4) Auth Flows
+       Access protected route without login → verify redirect to /login:
+     AssertionError: Timed out retrying after 4000ms: expected 'http://localhost:3000/dashboard' to include '/login'
+      at Context.eval (webpack://profitpulse-frontend/./cypress/e2e/auth.cy.js:52:17)
+
+
+
+
+  (Results)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Tests:        4                                                                                │
+  │ Passing:      0                                                                                │
+  │ Failing:      4                                                                                │
+  │ Pending:      0                                                                                │
+  │ Skipped:      0                                                                                │
+  │ Screenshots:  4                                                                                │
+  │ Video:        false                                                                            │
+  │ Duration:     20 seconds                                                                       │
+  │ Spec Ran:     auth.cy.js                                                                       │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+  (Screenshots)
+
+  -  C:\profitpulse\profitpulse-frontend\cypress\screenshots\auth.cy.js\Auth Flows --     (1280x720)
+      Login with valid admin credentials → verify redirect to Executive Dashboard (fa               
+     iled).png                                                                                      
+  -  C:\profitpulse\profitpulse-frontend\cypress\screenshots\auth.cy.js\Auth Flows --     (1280x720)
+      Login with wrong password → verify error message (failed).png                                 
+  -  C:\profitpulse\profitpulse-frontend\cypress\screenshots\auth.cy.js\Auth Flows --     (1280x720)
+      Login with each role → verify correct redirect (failed).png                                   
+  -  C:\profitpulse\profitpulse-frontend\cypress\screenshots\auth.cy.js\Auth Flows --     (1280x720)
+      Access protected route without login → verify redirect to login (failed).png                  
+
+
+====================================================================================================
+
+  (Run Finished)
+
+
+       Spec                                              Tests  Passing  Failing  Pending  Skipped  
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ ✖  auth.cy.js                               00:20        4        -        4        -        - │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+    ✖  1 of 1 failed (100%)                     00:20        4        -        4        -        -  
+
