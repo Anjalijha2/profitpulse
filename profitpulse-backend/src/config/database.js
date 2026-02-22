@@ -8,6 +8,13 @@ export const development = {
     port: process.env.DB_PORT || 3306,
     dialect: process.env.DB_DIALECT || 'mysql',
     logging: false, // Set to console.log to see SQL queries
+    ...(process.env.DB_SSL === 'true' && {
+        dialectOptions: {
+            ssl: {
+                rejectUnauthorized: false
+            }
+        }
+    }),
     define: {
         underscored: true,
         timestamps: true,

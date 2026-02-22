@@ -1,4 +1,5 @@
 import { StatusCodes } from 'http-status-codes';
+import { Op } from 'sequelize';
 import asyncHandler from '../utils/asyncHandler.js';
 import { apiResponse } from '../utils/apiResponse.js';
 import db from '../models/index.js';
@@ -6,7 +7,7 @@ import db from '../models/index.js';
 import { calculateProjectProfitability } from '../services/profitability.service.js';
 
 export const listProjects = asyncHandler(async (req, res) => {
-    const { project_type, client_id, vertical, status, page = 1, limit = 10 } = req.query;
+    const { project_type, client_id, vertical, status, search, page = 1, limit = 10 } = req.query;
     const offset = (Number(page) - 1) * Number(limit);
 
     const where = {};
@@ -14,6 +15,13 @@ export const listProjects = asyncHandler(async (req, res) => {
     if (client_id) where.client_id = client_id;
     if (vertical) where.vertical = vertical;
     if (status) where.status = status;
+
+    if (search) {
+        where[Op.or] = [
+            { name: { [Op.like]: `%${search}%` } },
+            { project_code: { [Op.like]: `%${search}%` } }
+        ];
+    }
 
     // RBAC
     if (req.user.role === 'delivery_manager') {

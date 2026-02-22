@@ -5,10 +5,16 @@ import { getPagination, getPagingData } from '../utils/helpers.js';
 import db from '../models/index.js';
 
 export const listUsers = asyncHandler(async (req, res) => {
-    const { page, limit } = req.query;
+    const { page, limit, role } = req.query;
     const { limit: lmt, offset } = getPagination(page, limit);
 
+    const where = {};
+    if (role) {
+        where.role = role;
+    }
+
     const data = await db.User.findAndCountAll({
+        where,
         limit: lmt,
         offset,
         attributes: { exclude: ['password'] },

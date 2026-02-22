@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import { Typography, Table, Input, Select, Button, Drawer, Tag, Row, Col, Card, Space } from 'antd';
+import { Typography, Table, Input, Select, Button, Drawer, Tag, Row, Col, Card, Space, Form, DatePicker as AntDatePicker, message, InputNumber } from 'antd';
 import { Search, Plus, Download, Eye, Briefcase, CheckCircle2, AlertCircle } from 'lucide-react';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { axiosInstance } from '../../api/axiosInstance';
 import { formatINRCompact } from '../../utils/formatters';
 import dayjs from 'dayjs';
@@ -12,29 +12,80 @@ const { Title, Text } = Typography;
 export default function ProjectList() {
     const [searchText, setSearchText] = useState('');
     const [statusFilter, setStatusFilter] = useState(null);
+    const [pagination, setPagination] = useState({ current: 1, pageSize: 15 });
     const navigate = useNavigate();
+    const queryClient = useQueryClient();
+    const [form] = Form.useForm();
+    const [isDrawerVisible, setIsDrawerVisible] = useState(false);
+    const [selectedType, setSelectedType] = useState('tm');
 
     const { data: response, isLoading } = useQuery({
-        queryKey: ['projects'],
+        queryKey: ['projects', pagination.current, pagination.pageSize, searchText, statusFilter],
         queryFn: async () => {
-            const res = await axiosInstance.get('/projects');
-            return res.data;
+            const params = {
+                page: pagination.current,
+                limit: pagination.pageSize,
+                search: searchText || undefined,
+                status: statusFilter || undefined
+            };
+            const res = await axiosInstance.get('/projects', { params });
+            return res; // AxiosInstance response interceptor returns response.data
+        },
+        keepPreviousData: true
+    });
+
+    // Fetch Clients for dropdown
+    const { data: clientsResponse } = useQuery({
+        queryKey: ['clients-lookup'],
+        queryFn: async () => {
+            const res = await axiosInstance.get('/clients');
+            return res.data || [];
         }
     });
 
-    const projects = Array.isArray(response) ? response : (response?.projects || response?.data?.items || response?.items || []);
-
-    const filteredProjects = projects.filter(p => {
-        const matchesSearch = p.name?.toLowerCase().includes(searchText.toLowerCase()) ||
-            p.project_code?.toLowerCase().includes(searchText.toLowerCase());
-        const matchesStatus = statusFilter ? p.status === statusFilter : true;
-        return matchesSearch && matchesStatus;
+    // Fetch Delivery Managers for dropdown
+    const { data: dmsResponse } = useQuery({
+        queryKey: ['dms-lookup'],
+        queryFn: async () => {
+            const res = await axiosInstance.get('/users?role=delivery_manager');
+            return res.data?.items || res.data || [];
+        }
     });
 
+    const createMutation = useMutation({
+        mutationFn: (newProject) => axiosInstance.post('/projects', newProject),
+        onSuccess: () => {
+            message.success('Project created successfully');
+            queryClient.invalidateQueries(['projects']);
+            setIsDrawerVisible(false);
+            form.resetFields();
+        },
+        onError: (err) => {
+            message.error(err.response?.data?.message || 'Failed to create project');
+        }
+    });
+
+    const onFinish = (values) => {
+        // Format dates for backend
+        const payload = {
+            ...values,
+            start_date: values.start_date ? values.start_date.format('YYYY-MM-DD') : undefined,
+            end_date: values.end_date ? values.end_date.format('YYYY-MM-DD') : undefined,
+        };
+        createMutation.mutate(payload);
+    };
+
+    const projects = response?.data || [];
+    const totalCount = response?.meta?.total || 0;
+
     const stats = {
-        total: projects.length,
-        active: projects.filter(p => p.status === 'active').length,
+        total: totalCount,
+        active: projects.filter(p => p.status === 'active').length, // This will only be for the current page, refine if needed
         completed: projects.filter(p => p.status === 'completed').length
+    };
+
+    const handleTableChange = (newPagination) => {
+        setPagination(newPagination);
     };
 
     const columns = [
@@ -136,10 +187,10 @@ export default function ProjectList() {
         link.setAttribute("download", `projects_export_${dayjs().format('YYYYMMDD')}.csv`);
         document.body.appendChild(link);
         link.click();
-        document.body.removeChild(link);
+        setTimeout(() => {
+            document.body.removeChild(link);
+        }, 100);
     };
-
-    const [isDrawerVisible, setIsDrawerVisible] = useState(false);
 
     return (
         <div className="animate-fade-in-up">
@@ -156,7 +207,7 @@ export default function ProjectList() {
 
             <Row gutter={[24, 24]} style={{ marginBottom: 24 }}>
                 <Col xs={24} sm={8}>
-                    <Card bordered={false} bodyStyle={{ padding: '16px 24px' }} style={{ borderRadius: 12, boxShadow: 'var(--shadow-card-default)' }}>
+                    <Card bordered={false} bodyStyle={{ padding: '16px 24px' }} style={{ borderRadius: 12, boxShadow: 'var(--shadow-card-default)', background: 'var(--color-card-bg)' }}>
                         <Text type="secondary" size="small">Total Projects</Text>
                         <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginTop: 4 }}>
                             <Title level={3} style={{ margin: 0 }}>{stats.total}</Title>
@@ -165,7 +216,7 @@ export default function ProjectList() {
                     </Card>
                 </Col>
                 <Col xs={24} sm={8}>
-                    <Card bordered={false} bodyStyle={{ padding: '16px 24px' }} style={{ borderRadius: 12, boxShadow: 'var(--shadow-card-default)' }}>
+                    <Card bordered={false} bodyStyle={{ padding: '16px 24px' }} style={{ borderRadius: 12, boxShadow: 'var(--shadow-card-default)', background: 'var(--color-card-bg)' }}>
                         <Text type="secondary" size="small">Active Engagements</Text>
                         <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginTop: 4 }}>
                             <Title level={3} style={{ margin: 0, color: 'var(--color-profit)' }}>{stats.active}</Title>
@@ -174,7 +225,7 @@ export default function ProjectList() {
                     </Card>
                 </Col>
                 <Col xs={24} sm={8}>
-                    <Card bordered={false} bodyStyle={{ padding: '16px 24px' }} style={{ borderRadius: 12, boxShadow: 'var(--shadow-card-default)' }}>
+                    <Card bordered={false} bodyStyle={{ padding: '16px 24px' }} style={{ borderRadius: 12, boxShadow: 'var(--shadow-card-default)', background: 'var(--color-card-bg)' }}>
                         <Text type="secondary" size="small">Completed</Text>
                         <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginTop: 4 }}>
                             <Title level={3} style={{ margin: 0, color: 'var(--color-primary-action)' }}>{stats.completed}</Title>
@@ -190,13 +241,19 @@ export default function ProjectList() {
                         placeholder="Search by code or name..."
                         prefix={<Search size={16} style={{ color: 'var(--color-text-muted)' }} />}
                         style={{ maxWidth: 320, borderRadius: 8 }}
-                        onChange={(e) => setSearchText(e.target.value)}
+                        onChange={(e) => {
+                            setSearchText(e.target.value);
+                            setPagination(prev => ({ ...prev, current: 1 }));
+                        }}
                     />
                     <Select
                         placeholder="Filter by status"
                         style={{ width: 160 }}
                         allowClear
-                        onChange={setStatusFilter}
+                        onChange={(val) => {
+                            setStatusFilter(val);
+                            setPagination(prev => ({ ...prev, current: 1 }));
+                        }}
                     >
                         <Select.Option value="active">Active</Select.Option>
                         <Select.Option value="completed">Completed</Select.Option>
@@ -206,10 +263,16 @@ export default function ProjectList() {
 
                 <Table
                     columns={columns}
-                    dataSource={filteredProjects}
+                    dataSource={projects}
                     rowKey="id"
                     loading={isLoading}
-                    pagination={{ pageSize: 15, showSizeChanger: true }}
+                    pagination={{
+                        ...pagination,
+                        total: totalCount,
+                        showSizeChanger: true,
+                        pageSizeOptions: ['10', '15', '20', '50']
+                    }}
+                    onChange={handleTableChange}
                     scroll={{ x: 1000 }}
                     style={{ padding: '0 12px' }}
                 />
@@ -218,30 +281,142 @@ export default function ProjectList() {
             <Drawer
                 title="Register New Engagement"
                 placement="right"
-                onClose={() => setIsDrawerVisible(false)}
+                onClose={() => {
+                    setIsDrawerVisible(false);
+                    form.resetFields();
+                }}
                 open={isDrawerVisible}
-                width={440}
+                width={560}
+                className="glass-drawer"
             >
-                <div style={{ padding: 12 }}>
-                    <Text type="secondary" style={{ display: 'block', marginBottom: 24 }}>Enter project details to register a new client engagement.</Text>
-                    <Space direction="vertical" style={{ width: '100%' }} size="large">
-                        <div>
-                            <Text strong style={{ display: 'block', marginBottom: 8 }}>Project Name</Text>
-                            <Input placeholder="e.g. Digital Transformation 2.0" size="large" />
-                        </div>
-                        <div>
-                            <Text strong style={{ display: 'block', marginBottom: 8 }}>Project Type</Text>
-                            <Select placeholder="Select type" style={{ width: '100%' }} size="large">
-                                <Select.Option value="tm">Time & Material</Select.Option>
-                                <Select.Option value="fixed_cost">Fixed Cost</Select.Option>
-                                <Select.Option value="amc">AMC</Select.Option>
-                            </Select>
-                        </div>
-                        <Button type="primary" block size="large" style={{ marginTop: 24 }} onClick={() => setIsDrawerVisible(false)}>
-                            Validate & Save Project
+                <Form
+                    form={form}
+                    layout="vertical"
+                    onFinish={onFinish}
+                    initialValues={{ project_type: 'tm', status: 'active' }}
+                    requiredMark="optional"
+                >
+                    <Row gutter={16}>
+                        <Col span={12}>
+                            <Form.Item
+                                name="project_code"
+                                label="Project ID / Code"
+                                rules={[{ required: true, message: 'Code is required' }]}
+                            >
+                                <Input placeholder="e.g. PRJ012" />
+                            </Form.Item>
+                        </Col>
+                        <Col span={12}>
+                            <Form.Item
+                                name="name"
+                                label="Project Name"
+                                rules={[{ required: true, message: 'Name is required' }]}
+                            >
+                                <Input placeholder="e.g. Enterprise Cloud Migration" />
+                            </Form.Item>
+                        </Col>
+                    </Row>
+
+                    <Row gutter={16}>
+                        <Col span={12}>
+                            <Form.Item
+                                name="client_id"
+                                label="Client"
+                                rules={[{ required: true, message: 'Client is required' }]}
+                            >
+                                <Select placeholder="Select client" showSearch optionFilterProp="children">
+                                    {clientsResponse?.map(c => (
+                                        <Select.Option key={c.id} value={c.id}>{c.name}</Select.Option>
+                                    ))}
+                                </Select>
+                            </Form.Item>
+                        </Col>
+                        <Col span={12}>
+                            <Form.Item
+                                name="project_type"
+                                label="Project Type"
+                                rules={[{ required: true }]}
+                            >
+                                <Select onChange={(v) => setSelectedType(v)}>
+                                    <Select.Option value="tm">Time & Material</Select.Option>
+                                    <Select.Option value="fixed_cost">Fixed Cost</Select.Option>
+                                    <Select.Option value="amc">AMC</Select.Option>
+                                    <Select.Option value="infrastructure">Infrastructure</Select.Option>
+                                </Select>
+                            </Form.Item>
+                        </Col>
+                    </Row>
+
+                    <Row gutter={16}>
+                        <Col span={12}>
+                            <Form.Item name="vertical" label="Vertical">
+                                <Select placeholder="e.g. AI / Healthcare">
+                                    <Select.Option value="AI">AI</Select.Option>
+                                    <Select.Option value="Healthcare">Healthcare</Select.Option>
+                                    <Select.Option value="Enterprise">Enterprise</Select.Option>
+                                    <Select.Option value="BFSI">BFSI</Select.Option>
+                                    <Select.Option value="Education">Education</Select.Option>
+                                </Select>
+                            </Form.Item>
+                        </Col>
+                        <Col span={12}>
+                            <Form.Item name="delivery_manager_id" label="Delivery Manager">
+                                <Select placeholder="Assign manager" showSearch optionFilterProp="children">
+                                    {dmsResponse?.map(dm => (
+                                        <Select.Option key={dm.id} value={dm.id}>{dm.name}</Select.Option>
+                                    ))}
+                                </Select>
+                            </Form.Item>
+                        </Col>
+                    </Row>
+
+                    <Row gutter={16}>
+                        <Col span={12}>
+                            <Form.Item name="start_date" label="Start Date">
+                                <AntDatePicker style={{ width: '100%' }} />
+                            </Form.Item>
+                        </Col>
+                        <Col span={12}>
+                            <Form.Item name="end_date" label="Anticipated End Date">
+                                <AntDatePicker style={{ width: '100%' }} />
+                            </Form.Item>
+                        </Col>
+                    </Row>
+
+                    <div style={{ background: 'rgba(255,255,255,0.03)', padding: 16, borderRadius: 8, marginBottom: 24, border: '1px dashed rgba(255,255,255,0.1)' }}>
+                        <Title level={5} style={{ fontSize: 14, marginTop: 0 }}>Contractual Details</Title>
+                        {selectedType === 'tm' ? (
+                            <Form.Item name="billing_rate" label="Hourly Billing Rate (₹)">
+                                <InputNumber style={{ width: '100%' }} formatter={value => `₹ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')} parser={value => value.replace(/\₹\s?|(,*)/g, '')} />
+                            </Form.Item>
+                        ) : (
+                            <Row gutter={12}>
+                                <Col span={12}>
+                                    <Form.Item name="contract_value" label="Total Contract Value (₹)">
+                                        <InputNumber style={{ width: '100%' }} formatter={value => `₹ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')} parser={value => value.replace(/\₹\s?|(,*)/g, '')} />
+                                    </Form.Item>
+                                </Col>
+                                <Col span={12}>
+                                    <Form.Item name="budgeted_hours" label="Budgeted Hours">
+                                        <InputNumber style={{ width: '100%' }} />
+                                    </Form.Item>
+                                </Col>
+                            </Row>
+                        )}
+                        {selectedType === 'infrastructure' && (
+                            <Form.Item name="infra_vendor_cost" label="Infra Vendor Cost (₹)">
+                                <InputNumber style={{ width: '100%' }} />
+                            </Form.Item>
+                        )}
+                    </div>
+
+                    <Space style={{ width: '100%', justifyContent: 'flex-end' }}>
+                        <Button onClick={() => setIsDrawerVisible(false)}>Cancel</Button>
+                        <Button type="primary" htmlType="submit" loading={createMutation.isLoading}>
+                            Register Project
                         </Button>
                     </Space>
-                </div>
+                </Form>
             </Drawer>
         </div>
     );

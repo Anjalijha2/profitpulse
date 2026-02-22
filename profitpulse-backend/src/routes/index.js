@@ -10,6 +10,7 @@ import uploadRoutes from './upload.routes.js';
 import dashboardRoutes from './dashboard.routes.js';
 import reportRoutes from './report.routes.js';
 import configRoutes from './config.routes.js';
+import clientRoutes from './client.routes.js';
 
 const router = express.Router();
 
@@ -23,6 +24,7 @@ router.use('/uploads', uploadRoutes);
 router.use('/dashboard', dashboardRoutes);
 router.use('/reports', reportRoutes);
 router.use('/config', configRoutes);
+router.use('/clients', clientRoutes);
 
 router.get('/health', (req, res) => {
     res.json({

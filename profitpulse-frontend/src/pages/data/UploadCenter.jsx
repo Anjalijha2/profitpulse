@@ -21,16 +21,26 @@ export default function UploadCenter() {
 
     const handleDownloadTemplate = async () => {
         try {
-            const res = await axiosInstance.get(`/uploads/template/${uploadType}`, { responseType: 'blob' });
-            const url = window.URL.createObjectURL(new Blob([res.data || res]));
+            const blob = await axiosInstance.get(`/uploads/template/${uploadType}`, {
+                responseType: 'blob'
+            });
+
+            // Create a Blob from the response data if it's not already one (Axios returns the blob directly if responseType is blob)
+            const downloadUrl = window.URL.createObjectURL(new Blob([blob]));
             const link = document.createElement('a');
-            link.href = url;
+            link.href = downloadUrl;
             link.setAttribute('download', `${uploadType}_template.xlsx`);
             document.body.appendChild(link);
             link.click();
-            link.remove();
+
+            // Clean up
+            setTimeout(() => {
+                document.body.removeChild(link);
+                window.URL.revokeObjectURL(downloadUrl);
+            }, 100);
         } catch (error) {
-            message.error('Failed to download template');
+            console.error('Download error:', error);
+            message.error('Failed to download template. Please try again.');
         }
     };
 

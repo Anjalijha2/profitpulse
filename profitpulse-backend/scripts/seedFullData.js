@@ -175,19 +175,21 @@ async function run() {
         }
         console.log(`🌱 Seeding ${months.length} Months of Activity Data (${months[0]} to ${months[months.length - 1]})...`);
 
+        const timesheetEntries = [];
+        const revenueEntries = [];
         let tsCount = 0;
         let revCount = 0;
 
         for (const month of months) {
             console.log(`   🗓️  Processing ${month}...`);
 
-            // Seed Timesheets
+            // Accumulate Timesheets
             for (const emp of employeeMap) {
                 const projCode = emp.billable
                     ? ['PRJ001', 'PRJ002', 'PRJ003', 'PRJ004', 'PRJ005', 'PRJ006', 'PRJ007'][Math.floor(Math.random() * 7)]
                     : 'PRJ010';
 
-                await db.Timesheet.create({
+                timesheetEntries.push({
                     employee_id: emp.id,
                     project_id: projectMap[projCode],
                     billable_hours: emp.billable ? (145 + Math.floor(Math.random() * 25)) : 0,
@@ -197,7 +199,7 @@ async function run() {
                 tsCount++;
             }
 
-            // Seed Revenue (Simulating invoices generated mid-month)
+            // Accumulate Revenue (Simulating invoices generated mid-month)
             const monthIdx = months.indexOf(month);
             const growthFactor = 1 + (monthIdx * 0.015); // ~1.5% monthly growth
 
@@ -206,25 +208,20 @@ async function run() {
 
                 let baseAmt = 0;
                 if (p.type === 'tm') {
-                    // T&M: hours worked * billing rate (3 resources avg * 150hrs)
                     baseAmt = p.rate * 150 * 3;
                 } else if (p.type === 'fixed_cost') {
-                    // Fixed: spread over project lifetime (12 months)
                     baseAmt = p.cv / 12;
                 } else if (p.type === 'amc') {
-                    // AMC: steady monthly income
                     baseAmt = p.cv / 12;
                 } else if (p.type === 'infrastructure') {
-                    // Infra: variable monthly managed services
                     baseAmt = 600000 + (Math.random() * 100000);
                 }
 
-                // Apply growth and minor noise
-                const noise = 0.92 + (Math.random() * 0.16); // +/- 8% variance
+                const noise = 0.92 + (Math.random() * 0.16);
                 const finalAmt = Math.round(baseAmt * growthFactor * noise);
 
                 if (finalAmt > 0) {
-                    await db.Revenue.create({
+                    revenueEntries.push({
                         project_id: projectMap[p.code],
                         client_id: clientMap[p.client],
                         invoice_amount: finalAmt,
@@ -238,6 +235,12 @@ async function run() {
             }
         }
 
+        console.log(`🚀 Bulk Inserting ${timesheetEntries.length} Timesheets...`);
+        await db.Timesheet.bulkCreate(timesheetEntries);
+
+        console.log(`🚀 Bulk Inserting ${revenueEntries.length} Revenues...`);
+        await db.Revenue.bulkCreate(revenueEntries);
+
         console.log(`
 ✅ SEEDING COMPLETE
 ---------------------------
@@ -246,8 +249,8 @@ Users:        ${SEED_USERS.length}
 Clients:      ${SEED_CLIENTS.length}
 Projects:     10
 Employees:    40
-Timesheets:   ${tsCount} rows (12 months)
-Revenue:      ${revCount} rows (12 months)
+Timesheets:   ${timesheetEntries.length} rows (${months.length} months)
+Revenue:      ${revenueEntries.length} rows (${months.length} months)
 ---------------------------
 Login: admin@profitpulse.com / Admin@123
 `);

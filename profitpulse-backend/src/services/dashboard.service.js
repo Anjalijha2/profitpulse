@@ -6,71 +6,128 @@ const { Op } = pkg;
 
 export const getExecutiveDashboard = async (month, year) => {
     // Construct full YYYY-MM string from query params.
-    // Frontend sends month='02' and year='2026', so we join them.
-    // Revenue and Timesheet rows store month as 'YYYY-MM'.
     const now = new Date();
     const resolvedYear = year || String(now.getFullYear());
     const resolvedMonth = month || String(now.getMonth() + 1).padStart(2, '0');
     const fullMonth = `${resolvedYear}-${resolvedMonth.padStart(2, '0')}`;
 
-    // Aggregate company wide logic
-    const projects = await db.Project.findAll({ attributes: ['id', 'name', 'status'] });
-
-    let totalRev = 0;
-    let totalCost = 0;
-    let projectStats = [];
-
-    // This is a slow loop for huge datasets, but fine for 100+ projects
-    for (let p of projects) {
-        const prof = await calculateProjectProfitability(p.id, fullMonth);
-        totalRev += prof.total_revenue;
-        totalCost += prof.total_cost;
-        projectStats.push(prof);
-    }
-
-    // Sort for top 5 / bottom 5
-    projectStats.sort((a, b) => b.margin_percent - a.margin_percent);
-
-    const top5 = projectStats.slice(0, 5);
-    const bottom5 = projectStats.slice(-5).reverse();
-
-    let gm = 0;
-    if (totalRev > 0) gm = ((totalRev - totalCost) / totalRev) * 100;
-    else if (totalCost > 0) gm = -100;
-
-    // --- Trend Data (Last 6 Months) ---
-    const trend = [];
-    const targetDate = new Date(resolvedYear, resolvedMonth - 1, 1);
+    // --- Preparation ---
+    const months = [];
+    const targetDate = new Date(Number(resolvedYear), Number(resolvedMonth) - 1, 1);
 
     for (let i = 5; i >= 0; i--) {
         const d = new Date(targetDate);
         d.setMonth(d.getMonth() - i);
-        const mStr = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
-        const shortName = d.toLocaleString('default', { month: 'short' });
+        months.push(`${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`);
+    }
 
+    // 1. Bulk Fetch Configs
+    const { standardHours, overhead } = await getSystemConfigs();
+
+    // 2. Fetch all projects
+    const projects = await db.Project.findAll();
+    const projectIds = projects.map(p => p.id);
+
+    // 3. Bulk Fetch Revenues and Timesheets for all relevant months
+    const [revenues, timesheets] = await Promise.all([
+        db.Revenue.findAll({
+            where: {
+                project_id: projectIds,
+                month: { [Op.in]: months }
+            }
+        }),
+        db.Timesheet.findAll({
+            where: {
+                project_id: projectIds,
+                month: { [Op.in]: months }
+            },
+            include: [{ model: db.Employee, as: 'employee', attributes: ['annual_ctc'] }]
+        })
+    ]);
+
+    // --- In-Memory Aggregation ---
+    // Structure: dataMap[month][projectId] = { revenue: 0, cost: 0 }
+    const dataMap = {};
+    months.forEach(m => {
+        dataMap[m] = {};
+        projects.forEach(p => {
+            dataMap[m][p.id] = {
+                revenue: 0,
+                cost: (p.project_type === 'infrastructure' && p.infra_vendor_cost) ? Number(p.infra_vendor_cost) : 0
+            };
+        });
+    });
+
+    revenues.forEach(rev => {
+        if (dataMap[rev.month] && dataMap[rev.month][rev.project_id]) {
+            dataMap[rev.month][rev.project_id].revenue += Number(rev.invoice_amount);
+        }
+    });
+
+    timesheets.forEach(ts => {
+        if (dataMap[ts.month] && dataMap[ts.month][ts.project_id] && ts.employee) {
+            const costPerHour = formulas.calculateEmployeeCostPerHour(ts.employee.annual_ctc, overhead, standardHours);
+            const cost = formulas.calculateTMCost(costPerHour, Number(ts.billable_hours) + Number(ts.non_billable_hours));
+            dataMap[ts.month][ts.project_id].cost += cost;
+        }
+    });
+
+    // --- Calculate KPIs for the Selected Month ---
+    let totalRev = 0;
+    let totalCost = 0;
+    const projectStats = projects.map(p => {
+        const stats = dataMap[fullMonth][p.id];
+        const profit = stats.revenue - stats.cost;
+        const margin = stats.revenue > 0 ? (profit / stats.revenue) * 100 : 0;
+
+        totalRev += stats.revenue;
+        totalCost += stats.cost;
+
+        return {
+            project_id: p.id,
+            name: p.name,
+            project_type: p.project_type,
+            total_revenue: stats.revenue,
+            total_cost: stats.cost,
+            profit: Number(profit.toFixed(2)),
+            margin_percent: Number(margin.toFixed(2))
+        };
+    });
+
+    // Sort for top 5 / bottom 5
+    projectStats.sort((a, b) => b.margin_percent - a.margin_percent);
+    const top5 = projectStats.slice(0, 5);
+    const bottom5 = projectStats.slice(-5).reverse();
+
+    const gm = totalRev > 0 ? ((totalRev - totalCost) / totalRev) * 100 : (totalCost > 0 ? -100 : 0);
+
+    // --- Calculate Trends ---
+    const trend = months.map(m => {
         let mRev = 0;
         let mCost = 0;
+        const [y, mm] = m.split('-');
+        const d = new Date(Number(y), Number(mm) - 1, 1);
+        const shortName = d.toLocaleString('default', { month: 'short' });
 
-        for (let p of projects) {
-            const pProf = await calculateProjectProfitability(p.id, mStr);
-            mRev += pProf.total_revenue;
-            mCost += pProf.total_cost;
-        }
+        projects.forEach(p => {
+            mRev += dataMap[m][p.id].revenue;
+            mCost += dataMap[m][p.id].cost;
+        });
 
-        trend.push({
+        return {
             name: shortName,
-            month: mStr,
-            revenue: Number((mRev / 100000).toFixed(2)), // In Lakhs for chart
+            month: m,
+            revenue: Number((mRev / 100000).toFixed(2)), // Lakhs
             cost: Number((mCost / 100000).toFixed(2)),
             profit: Number(((mRev - mCost) / 100000).toFixed(2))
-        });
-    }
+        };
+    });
 
     return {
         total_revenue: totalRev,
         total_cost: totalCost,
         gross_margin_percent: Number(gm.toFixed(2)),
-        utilization_percent: 85.5, // Mocked overall util for now, requires deep timesheet scan
+        utilization_percent: 85.5, // Mocked overall util
         top_5_projects: top5,
         bottom_5_projects: bottom5,
         trend
