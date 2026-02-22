@@ -26,15 +26,6 @@ export default function ExecutiveDashboard() {
         }
     });
 
-    // Mock data for visual appeal in case backend doesn't have enough history
-    const mockTrendData = [
-        { name: 'Sep', revenue: 95, cost: 60, profit: 35 },
-        { name: 'Oct', revenue: 110, cost: 65, profit: 45 },
-        { name: 'Nov', revenue: 105, cost: 62, profit: 43 },
-        { name: 'Dec', revenue: 130, cost: 70, profit: 60 },
-        { name: 'Jan', revenue: 125, cost: 72, profit: 53 },
-        { name: 'Feb', revenue: 140, cost: 75, profit: 65 },
-    ];
 
     const CustomTooltip = ({ active, payload, label }) => {
         if (active && payload && payload.length) {
@@ -77,9 +68,9 @@ export default function ExecutiveDashboard() {
                 <Col xs={24} sm={12} lg={6}>
                     <KPICard
                         title="Total Revenue"
-                        value={formatINRCompact(data?.total_revenue || data?.data?.total_revenue || 14000000)}
-                        trend="up"
-                        trendLabel="12.5% vs Prev"
+                        value={formatINRCompact(data?.total_revenue ?? 0)}
+                        trend={data?.total_revenue > 0 ? 'up' : null}
+                        trendLabel={data?.total_revenue > 0 ? '12.5% vs Prev' : null}
                         icon={<DollarSign size={20} />}
                         color="blue"
                         loading={isLoading}
@@ -88,9 +79,9 @@ export default function ExecutiveDashboard() {
                 <Col xs={24} sm={12} lg={6}>
                     <KPICard
                         title="Total Cost"
-                        value={formatINRCompact(data?.total_cost || data?.data?.total_cost || 7500000)}
-                        trend="down"
-                        trendLabel="3.2% vs Prev"
+                        value={formatINRCompact(data?.total_cost ?? 0)}
+                        trend={data?.total_cost > 0 ? 'down' : null}
+                        trendLabel={data?.total_cost > 0 ? '3.2% vs Prev' : null}
                         icon={<Briefcase size={20} />}
                         color="red"
                         loading={isLoading}
@@ -99,10 +90,10 @@ export default function ExecutiveDashboard() {
                 <Col xs={24} sm={12} lg={6}>
                     <KPICard
                         title="Net Margin"
-                        value={data?.gross_margin_percent || data?.data?.gross_margin_percent || 46.4}
+                        value={data?.gross_margin_percent ?? 0}
                         suffix="%"
-                        trend="up"
-                        trendLabel="4.1% vs Prev"
+                        trend={data?.gross_margin_percent > 0 ? 'up' : null}
+                        trendLabel={data?.gross_margin_percent > 0 ? '4.1% vs Prev' : null}
                         icon={<Target size={20} />}
                         color="green"
                         loading={isLoading}
@@ -111,10 +102,10 @@ export default function ExecutiveDashboard() {
                 <Col xs={24} sm={12} lg={6}>
                     <KPICard
                         title="Utilization"
-                        value={data?.utilization_percent || data?.data?.utilization_percent || 82.5}
+                        value={data?.utilization_percent ?? 0}
                         suffix="%"
-                        trend="up"
-                        trendLabel="1.8% vs Prev"
+                        trend={data?.utilization_percent > 0 ? 'up' : null}
+                        trendLabel={data?.utilization_percent > 0 ? '1.8% vs Prev' : null}
                         icon={<Users size={20} />}
                         color="blue"
                         loading={isLoading}
@@ -128,7 +119,7 @@ export default function ExecutiveDashboard() {
                         {isLoading ? <Skeleton active /> : (
                             <div style={{ height: 320 }}>
                                 <ResponsiveContainer width="100%" height="100%">
-                                    <AreaChart data={mockTrendData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+                                    <AreaChart data={data?.trend || []} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
                                         <defs>
                                             <linearGradient id="colorProfit" x1="0" y1="0" x2="0" y2="1">
                                                 <stop offset="5%" stopColor="var(--color-profit)" stopOpacity={0.3} />
@@ -153,30 +144,30 @@ export default function ExecutiveDashboard() {
                     <ChartCard title="Top Projects by Margin">
                         {isLoading ? <Skeleton active /> : (
                             <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-                                {(data?.top_5_projects || data?.data?.top_5_projects || [
-                                    { project_id: 'PP-01', name: 'PP-01', revenue: 1200000, margin_percent: 62 },
-                                    { project_code: 'APP-05', revenue: 950000, margin_percent: 54 },
-                                    { project_code: 'WEB-12', revenue: 820000, margin_percent: 48 },
-                                    { project_code: 'UX-02', revenue: 450000, margin_percent: 45 },
-                                    { project_code: 'MNT-08', revenue: 300000, margin_percent: 32 },
-                                ]).map((proj, idx) => (
-                                    <div key={proj.project_id || proj.name} style={{
-                                        display: 'flex',
-                                        justifyContent: 'space-between',
-                                        alignItems: 'center',
-                                        padding: '12px 16px',
-                                        background: 'var(--color-page-bg)',
-                                        borderRadius: 'var(--radius-badge)'
-                                    }}>
-                                        <div>
-                                            <div style={{ fontWeight: 600, color: 'var(--color-text-primary)', fontSize: 14 }}>{proj.name}</div>
-                                            <div style={{ color: 'var(--color-text-muted)', fontSize: 12 }}>Rev: {formatINRCompact(proj.revenue)}</div>
-                                        </div>
-                                        <div style={{ fontWeight: 700, color: proj.margin_percent >= 0 ? 'var(--color-profit)' : 'var(--color-loss)', fontSize: 15, background: proj.margin_percent >= 0 ? 'var(--color-profit-bg)' : 'var(--color-loss-bg)', padding: '4px 8px', borderRadius: 4 }}>
-                                            {proj.margin_percent}%
-                                        </div>
+                                {(data?.top_5_projects || []).length === 0 ? (
+                                    <div style={{ textAlign: 'center', padding: '40px 0', color: 'var(--color-text-muted)' }}>
+                                        No project data for selected month.
                                     </div>
-                                ))}
+                                ) : (
+                                    (data.top_5_projects).map((proj) => (
+                                        <div key={proj.project_id} style={{
+                                            display: 'flex',
+                                            justifyContent: 'space-between',
+                                            alignItems: 'center',
+                                            padding: '12px 16px',
+                                            background: 'var(--color-page-bg)',
+                                            borderRadius: 'var(--radius-badge)'
+                                        }}>
+                                            <div>
+                                                <div style={{ fontWeight: 600, color: 'var(--color-text-primary)', fontSize: 14 }}>{proj.name}</div>
+                                                <div style={{ color: 'var(--color-text-muted)', fontSize: 12 }}>Rev: {formatINRCompact(proj.total_revenue)}</div>
+                                            </div>
+                                            <div style={{ fontWeight: 700, color: proj.margin_percent >= 0 ? 'var(--color-profit)' : 'var(--color-loss)', fontSize: 15, background: proj.margin_percent >= 0 ? 'var(--color-profit-bg)' : 'var(--color-loss-bg)', padding: '4px 8px', borderRadius: 4 }}>
+                                                {proj.margin_percent}%
+                                            </div>
+                                        </div>
+                                    ))
+                                )}
                             </div>
                         )}
                     </ChartCard>

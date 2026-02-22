@@ -5,6 +5,14 @@ import { calculateProjectProfitability } from './profitability.service.js';
 const { Op } = pkg;
 
 export const getExecutiveDashboard = async (month, year) => {
+    // Construct full YYYY-MM string from query params.
+    // Frontend sends month='02' and year='2026', so we join them.
+    // Revenue and Timesheet rows store month as 'YYYY-MM'.
+    const now = new Date();
+    const resolvedYear = year || String(now.getFullYear());
+    const resolvedMonth = month || String(now.getMonth() + 1).padStart(2, '0');
+    const fullMonth = `${resolvedYear}-${resolvedMonth.padStart(2, '0')}`;
+
     // Aggregate company wide logic
     const projects = await db.Project.findAll({ attributes: ['id', 'name', 'status'] });
 
@@ -14,7 +22,7 @@ export const getExecutiveDashboard = async (month, year) => {
 
     // This is a slow loop for huge datasets, but fine for 100+ projects
     for (let p of projects) {
-        const prof = await calculateProjectProfitability(p.id, month); // simplified
+        const prof = await calculateProjectProfitability(p.id, fullMonth);
         totalRev += prof.total_revenue;
         totalCost += prof.total_cost;
         projectStats.push(prof);
@@ -30,13 +38,42 @@ export const getExecutiveDashboard = async (month, year) => {
     if (totalRev > 0) gm = ((totalRev - totalCost) / totalRev) * 100;
     else if (totalCost > 0) gm = -100;
 
+    // --- Trend Data (Last 6 Months) ---
+    const trend = [];
+    const targetDate = new Date(resolvedYear, resolvedMonth - 1, 1);
+
+    for (let i = 5; i >= 0; i--) {
+        const d = new Date(targetDate);
+        d.setMonth(d.getMonth() - i);
+        const mStr = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+        const shortName = d.toLocaleString('default', { month: 'short' });
+
+        let mRev = 0;
+        let mCost = 0;
+
+        for (let p of projects) {
+            const pProf = await calculateProjectProfitability(p.id, mStr);
+            mRev += pProf.total_revenue;
+            mCost += pProf.total_cost;
+        }
+
+        trend.push({
+            name: shortName,
+            month: mStr,
+            revenue: Number((mRev / 100000).toFixed(2)), // In Lakhs for chart
+            cost: Number((mCost / 100000).toFixed(2)),
+            profit: Number(((mRev - mCost) / 100000).toFixed(2))
+        });
+    }
+
     return {
         total_revenue: totalRev,
         total_cost: totalCost,
         gross_margin_percent: Number(gm.toFixed(2)),
         utilization_percent: 85.5, // Mocked overall util for now, requires deep timesheet scan
         top_5_projects: top5,
-        bottom_5_projects: bottom5
+        bottom_5_projects: bottom5,
+        trend
     };
 };
 

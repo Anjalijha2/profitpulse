@@ -177,18 +177,25 @@ const seedData = async () => {
         console.log(`✅ Verified/Created 10 projects`);
 
         // 7. Timesheets & Revenue 
-        const months = ['2025-01', '2025-02'];
+        const months = [];
+        const d = new Date();
+        for (let i = 11; i >= 0; i--) {
+            const temp = new Date(d);
+            temp.setMonth(temp.getMonth() - i);
+            months.push(`${temp.getFullYear()}-${String(temp.getMonth() + 1).padStart(2, '0')}`);
+        }
 
-        const revenueGen = {
-            'PRJ001': [1250000, 1375000],
-            'PRJ002': [875000, 950000],
-            'PRJ003': [1500000, 1400000],
-            'PRJ004': [2200000, 2200000],
-            'PRJ005': [1850000, 1850000],
-            'PRJ006': [2500000, 0],
-            'PRJ007': [750000, 800000],
-            'PRJ008': [425000, 425000],
-            'PRJ009': [350000, 350000]
+        const getRevAmount = (pCode, mIdx) => {
+            const baseMap = {
+                'PRJ001': 1300000, 'PRJ002': 900000, 'PRJ003': 1450000,
+                'PRJ004': 2200000, 'PRJ005': 1850000, 'PRJ006': 2500000,
+                'PRJ007': 780000, 'PRJ008': 425000, 'PRJ009': 350000
+            };
+            const base = baseMap[pCode] || 0;
+            if (base === 0) return 0;
+            // Add some variance
+            const variance = 0.8 + (Math.random() * 0.4); // 80% to 120%
+            return Math.floor(base * variance);
         };
 
         // Make Timesheets
@@ -246,8 +253,9 @@ const seedData = async () => {
             }
 
             // Revenue
-            for (const [pCode, amounts] of Object.entries(revenueGen)) {
-                const revAmount = amounts[mIdx];
+            const projs = Object.keys(projectMap).filter(k => k !== 'PRJ010');
+            for (const pCode of projs) {
+                const revAmount = getRevAmount(pCode, mIdx);
                 if (revAmount > 0) {
                     const pId = projectMap[pCode];
                     const existingRev = await db.Revenue.findOne({ where: { project_id: pId, month: mStr } });
