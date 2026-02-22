@@ -30,8 +30,8 @@ export default function ExecutiveDashboard() {
     const CustomTooltip = ({ active, payload, label }) => {
         if (active && payload && payload.length) {
             return (
-                <div style={{ background: '#fff', border: '1px solid var(--color-card-border)', padding: '12px', borderRadius: '8px', boxShadow: 'var(--shadow-dropdown)' }}>
-                    <p style={{ margin: '0 0 8px 0', fontWeight: 600, color: 'var(--color-text-primary)' }}>{label}</p>
+                <div style={{ background: 'rgba(11, 20, 48, 0.95)', backdropFilter: 'blur(8px)', border: '1px solid rgba(255,255,255,0.1)', padding: '12px', borderRadius: '10px', boxShadow: 'var(--shadow-dropdown)' }}>
+                    <p style={{ margin: '0 0 8px 0', fontWeight: 600, color: '#FFFFFF' }}>{label}</p>
                     {payload.map(p => (
                         <p key={p.dataKey} style={{ margin: 0, color: p.color, fontWeight: 500, fontSize: 13 }}>
                             {p.name}: {p.dataKey === 'profit' || p.dataKey === 'revenue' || p.dataKey === 'cost' ? '₹' + p.value + 'L' : p.value}

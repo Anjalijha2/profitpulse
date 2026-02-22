@@ -81,7 +81,12 @@ export default function DepartmentDashboard() {
                                         <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--color-card-border)" />
                                         <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: 'var(--color-text-muted)', fontSize: 12 }} dy={10} />
                                         <YAxis axisLine={false} tickLine={false} tick={{ fill: 'var(--color-text-muted)', fontSize: 12 }} tickFormatter={(val) => `₹${(val / 100000).toFixed(1)}L`} />
-                                        <RechartsTooltip formatter={(val) => formatINRCompact(val)} />
+                                        <RechartsTooltip
+                                            formatter={(val) => formatINRCompact(val)}
+                                            contentStyle={{ background: 'rgba(11, 20, 48, 0.95)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '10px', boxShadow: 'var(--shadow-dropdown)', backdropFilter: 'blur(8px)' }}
+                                            itemStyle={{ color: '#fff', fontWeight: 500 }}
+                                            labelStyle={{ color: '#fff', fontWeight: 600, marginBottom: 8 }}
+                                        />
                                         <Legend verticalAlign="top" align="right" iconType="circle" />
                                         <Bar dataKey="revenue" name="Revenue" fill="var(--color-primary-action)" radius={[4, 4, 0, 0]} barSize={35} />
                                         <Bar dataKey="cost" name="Cost" fill="var(--color-loss)" radius={[4, 4, 0, 0]} barSize={35} />

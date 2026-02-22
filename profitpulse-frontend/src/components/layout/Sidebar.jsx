@@ -7,6 +7,7 @@ import {
 import { useAuthStore } from '../../store/authStore';
 import { useUiStore } from '../../store/uiStore';
 import { useRbacStore } from '../../store/rbacStore';
+import ProfitPulseLogo from '../common/ProfitPulseLogo';
 
 const { Sider } = Layout;
 
@@ -93,23 +94,23 @@ export default function Sidebar() {
             onCollapse={setSidebarCollapsed}
             width={256}
             style={{
-                background: 'var(--color-sidebar-bg)',
+                background: 'rgba(6, 11, 25, 0.6)', /* Translucent dark navy */
+                backdropFilter: 'blur(20px)',
+                WebkitBackdropFilter: 'blur(20px)',
+                borderRight: '1px solid rgba(255, 255, 255, 0.08)',
                 overflow: 'auto',
                 height: '100vh',
                 position: 'fixed',
                 left: 0,
                 top: 0,
                 bottom: 0,
-                zIndex: 10,
-                boxShadow: 'var(--shadow-sidebar)'
+                zIndex: 100,
+                boxShadow: '4px 0 24px rgba(0, 0, 0, 0.4)'
             }}
             breakpoint="lg"
         >
-            <div style={{ height: 64, padding: '20px', display: 'flex', alignItems: 'center', gap: 12 }}>
-                <div style={{ width: 32, height: 32, background: 'var(--color-primary-action)', borderRadius: 'var(--radius-button)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontWeight: 700 }}>
-                    ⚡
-                </div>
-                {!sidebarCollapsed && <span style={{ fontSize: 18, fontWeight: 700, color: 'var(--color-text-on-dark)' }}>ProfitPulse</span>}
+            <div style={{ height: 64, padding: '14px 20px', display: 'flex', alignItems: 'center' }}>
+                <ProfitPulseLogo collapsed={sidebarCollapsed} size={34} />
             </div>
 
             {/* Global CSS injected styling override for Ant Menu matching variables */}

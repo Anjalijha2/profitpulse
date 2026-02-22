@@ -18,6 +18,7 @@ const queryClient = new QueryClient({
 function App() {
     return (
         <ConfigProvider theme={{
+            algorithm: antdTheme.algorithm,
             token: antdTheme.token,
             components: antdTheme.components
         }}>
