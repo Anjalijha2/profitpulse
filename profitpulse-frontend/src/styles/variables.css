@@ -1,51 +1,51 @@
 :root {
-    /* CORE COLORS - Neon Theme */
-    --color-primary-brand: #02040A; /* Near black */
-    --color-primary-action: #22D3EE; /* Cyan neon */
-    --color-primary-hover: #06B6D4;
+    /* CORE COLORS - OpenSpace Services Theme */
+    --color-primary-brand: #040222; /* Navy */
+    --color-primary-action: #F11A10; /* Primary Red */
+    --color-primary-hover: #D1170D; /* Darker Red for hover */
 
-    --color-profit: #34D399; /* Neon Emerald */
-    --color-profit-bg: rgba(52, 211, 153, 0.15);
+    --color-profit: #10B981; /* Green */
+    --color-profit-bg: rgba(16, 185, 129, 0.15);
 
-    --color-loss: #F43F5E; /* Neon Rose */
-    --color-loss-bg: rgba(244, 63, 94, 0.15);
+    --color-loss: #EF4444; /* Red */
+    --color-loss-bg: rgba(239, 68, 68, 0.15);
 
-    --color-warning: #FBBF24;
-    --color-warning-bg: rgba(251, 191, 36, 0.15);
+    --color-warning: #F59E0B;
+    --color-warning-bg: rgba(245, 158, 11, 0.15);
 
-    --color-info: #818CF8;
+    --color-info: #DBF0FF; /* Light Blue Background from Openspace */
 
-    /* SURFACE COLORS - Dark Glassmorphism */
-    --color-page-bg: #060B19; /* Deep Navy background */
-    --color-card-bg: rgba(11, 20, 48, 0.6); /* Translucent Glass */
-    --color-card-border: rgba(255, 255, 255, 0.08); /* Frosted edge */
-    --color-table-header: rgba(255, 255, 255, 0.04);
+    /* SURFACE COLORS - Light Clean Theme */
+    --color-page-bg: #F6F6F6; /* Section/Footer Background - Light Gray */
+    --color-card-bg: #FFFFFF; /* Pure white */
+    --color-card-border: rgba(4, 2, 34, 0.08); /* Subtle navy border */
+    --color-table-header: #FAF5FF; /* Light Lavender/Pink Background */
 
     /* TEXT COLORS */
-    --color-text-primary: #FFFFFF;
-    --color-text-secondary: #CBD5E1; /* Light Slate */
-    --color-text-muted: #94A3B8;
-    --color-text-on-dark: #FFFFFF;
+    --color-text-primary: #040222; /* Primary Text / Heading Navy */
+    --color-text-secondary: #212529; /* Body Text Gray */
+    --color-text-muted: #6B7280; /* Muted gray */
+    --color-text-on-dark: #FFFFFF; /* Inverse text */
 
     /* SIDEBAR */
-    --color-sidebar-bg: #02040A; /* Darkest */
-    --color-sidebar-text: #94A3B8;
-    --color-sidebar-active-bg: rgba(34, 211, 238, 0.12); /* Cyan glow */
-    --color-sidebar-active-text: #22D3EE;
-    --color-sidebar-accent: #22D3EE;
+    --color-sidebar-bg: rgb(56, 67, 100); /* Professional Navy/Blue */
+    --color-sidebar-text: rgba(255, 255, 255, 0.65);
+    --color-sidebar-active-bg: rgba(255, 255, 255, 0.12);
+    --color-sidebar-active-text: #FFFFFF;
+    --color-sidebar-accent: #F11A10;
 
     /* TYPOGRAPHY */
     --font-family-base: 'Inter', -apple-system, sans-serif;
 
     /* SHADOWS & GLOWS */
-    --shadow-card-default: 0 4px 20px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255,255,255,0.05); /* Premium glass shadow */
-    --shadow-card-hover: 0 8px 30px rgba(0, 0, 0, 0.4), 0 0 15px rgba(34, 211, 238, 0.15); /* Glow on hover */
-    --shadow-dropdown: 0 16px 40px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255,255,255,0.1);
-    --shadow-sidebar: 4px 0 24px rgba(0, 0, 0, 0.4);
+    --shadow-card-default: 0 2px 12px rgba(4, 2, 34, 0.06); /* Soft navy shadow */
+    --shadow-card-hover: 0 8px 24px rgba(4, 2, 34, 0.12); /* Stronger shadow on hover */
+    --shadow-dropdown: 0 10px 30px rgba(4, 2, 34, 0.1);
+    --shadow-sidebar: 2px 0 12px rgba(4, 2, 34, 0.05);
 
     /* BORDER RADIUS */
     --radius-card: 16px;
-    --radius-button: 10px;
-    --radius-input: 10px;
+    --radius-button: 8px; /* Slightly less rounded */
+    --radius-input: 8px;
     --radius-badge: 6px;
 }

@@ -35,19 +35,19 @@ h6 {
 }
 
 ::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(4, 2, 34, 0.1);
     border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: rgba(34, 211, 238, 0.5);
-    /* Neon Cyan hover */
+    background: rgba(241, 26, 16, 0.5);
+    /* Red hover */
 }
 
-/* Neon Text Selection */
+/* Primary Red Text Selection */
 ::selection {
-    background: rgba(34, 211, 238, 0.3);
-    color: #FFFFFF;
+    background: rgba(241, 26, 16, 0.3);
+    color: #040222;
 }
 
 /* Typography Classes */

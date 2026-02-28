@@ -1,81 +1,81 @@
 import { theme } from 'antd';
 
 export const antdTheme = {
-    algorithm: theme.darkAlgorithm,
+    algorithm: theme.defaultAlgorithm,
     token: {
         fontFamily: "'Inter', -apple-system, sans-serif",
-        colorPrimary: '#22D3EE',    // Neon Cyan
-        colorInfo: '#818CF8',      // Soft Indigo
-        colorSuccess: '#34D399',    // Neon Emerald
-        colorWarning: '#FBBF24',    // Bright Amber
-        colorError: '#F43F5E',      // Neon Rose
+        colorPrimary: '#F11A10',    // Primary Red
+        colorInfo: '#DBF0FF',      // Light Blue
+        colorSuccess: '#10B981',    // Green
+        colorWarning: '#F59E0B',    // Amber
+        colorError: '#EF4444',      // Red
 
-        // Dark Mode Base
-        colorTextBase: '#FFFFFF',
-        colorTextSecondary: '#CBD5E1',     // Slate-300
-        colorTextQuaternary: '#64748B',    // Slate-500
-        colorBgLayout: 'transparent',      // Was '#F8FAFC' now transparent to let waves show
-        colorBgContainer: 'rgba(11, 20, 48, 0.55)', // Glass Panel Background
-        colorBgElevated: 'rgba(11, 20, 48, 0.85)',  // Modals, Dropdowns
+        // Light Mode Base
+        colorTextBase: '#040222',
+        colorTextSecondary: '#212529',
+        colorTextQuaternary: '#6B7280',
+        colorBgLayout: '#F6F6F6',      // Background
+        colorBgContainer: '#FFFFFF', // Cards
+        colorBgElevated: '#FFFFFF',  // Modals, Dropdowns
 
         // Borders
-        colorBorder: 'rgba(255, 255, 255, 0.1)',
-        colorBorderSecondary: 'rgba(255, 255, 255, 0.05)',
+        colorBorder: 'rgba(4, 2, 34, 0.15)',
+        colorBorderSecondary: 'rgba(4, 2, 34, 0.08)',
 
         // Radii
-        borderRadius: 10,
+        borderRadius: 8,
         borderRadiusLG: 16,
         borderRadiusSM: 6,
-        boxShadowTertiary: '0 8px 32px rgba(0, 0, 0, 0.3)',
+        boxShadowTertiary: '0 8px 32px rgba(4, 2, 34, 0.08)',
     },
     components: {
         Button: {
-            colorPrimary: '#06B6D4',
-            colorPrimaryHover: '#22D3EE',
-            colorPrimaryActive: '#0891B2',
-            borderRadius: 10,
+            colorPrimary: '#F11A10',
+            colorPrimaryHover: '#D1170D',
+            colorPrimaryActive: '#B21008',
+            borderRadius: 8,
             controlHeight: 40,
         },
         Card: {
             borderRadiusLG: 16,
-            colorBorderSecondary: 'rgba(255, 255, 255, 0.1)',
-            boxShadowTertiary: '0 4px 20px rgba(0, 0, 0, 0.3)',
+            colorBorderSecondary: 'rgba(4, 2, 34, 0.08)',
+            boxShadowTertiary: '0 4px 20px rgba(4, 2, 34, 0.06)',
         },
         Menu: {
-            colorItemText: '#94A3B8',
-            colorItemTextHover: '#FFFFFF',
+            colorItemText: '#6B7280',
+            colorItemTextHover: '#040222',
             colorItemBg: 'transparent',
-            colorItemBgHover: 'rgba(34, 211, 238, 0.08)',
-            colorItemBgSelected: 'rgba(34, 211, 238, 0.12)',
-            colorItemTextSelected: '#22D3EE',
+            colorItemBgHover: 'rgba(241, 26, 16, 0.04)',
+            colorItemBgSelected: 'rgba(241, 26, 16, 0.08)',
+            colorItemTextSelected: '#F11A10',
             itemBorderRadius: 8,
             itemMarginInline: 12,
         },
         Table: {
-            headerBg: 'rgba(255, 255, 255, 0.03)',
-            headerColor: '#CBD5E1',       // High contrast header text
-            rowHoverBg: 'rgba(255, 255, 255, 0.04)',
-            borderRadius: 10,
+            headerBg: '#FAF5FF',
+            headerColor: '#040222',
+            rowHoverBg: 'rgba(4, 2, 34, 0.02)',
+            borderRadius: 8,
             fontSize: 14,
-            borderColor: 'rgba(255, 255, 255, 0.06)',
-            colorBgContainer: 'transparent', // Make tables glass too inside cards
+            borderColor: 'rgba(4, 2, 34, 0.06)',
+            colorBgContainer: '#FFFFFF',
         },
         Input: {
-            borderRadius: 10,
+            borderRadius: 8,
             controlHeight: 40,
-            colorBgContainer: 'rgba(255, 255, 255, 0.08)',
-            colorBorder: 'rgba(255, 255, 255, 0.15)',
+            colorBgContainer: '#FFFFFF',
+            colorBorder: 'rgba(4, 2, 34, 0.15)',
         },
         Select: {
-            borderRadius: 10,
+            borderRadius: 8,
             controlHeight: 40,
-            colorBgContainer: 'rgba(255, 255, 255, 0.08)',
-            colorBorder: 'rgba(255, 255, 255, 0.15)',
+            colorBgContainer: '#FFFFFF',
+            colorBorder: 'rgba(4, 2, 34, 0.15)',
         },
         DatePicker: {
-            borderRadius: 10,
-            colorBgContainer: 'rgba(255, 255, 255, 0.08)',
-            colorBorder: 'rgba(255, 255, 255, 0.15)',
+            borderRadius: 8,
+            colorBgContainer: '#FFFFFF',
+            colorBorder: 'rgba(4, 2, 34, 0.15)',
         }
     }
 };

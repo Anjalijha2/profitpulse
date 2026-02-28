@@ -25,10 +25,10 @@ export default function AppHeader() {
     return (
         <Header style={{
             padding: '0 32px',
-            background: 'rgba(6, 11, 25, 0.45)', // Translucent dark
+            background: 'rgba(255, 255, 255, 0.85)', // Translucent light
             backdropFilter: 'blur(20px)',
             WebkitBackdropFilter: 'blur(20px)',
-            borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+            borderBottom: '1px solid rgba(4, 2, 34, 0.08)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
@@ -39,20 +39,20 @@ export default function AppHeader() {
         }}>
             <div className="breadcrumb-area">
                 {/* Placeholder for dynamic breadcrumbs */}
-                <span style={{ fontSize: 13, fontWeight: 500, letterSpacing: '0.02em', color: 'rgba(255, 255, 255, 0.6)' }}>WORKSPACE / OVERVIEW</span>
+                <span style={{ fontSize: 13, fontWeight: 600, letterSpacing: '0.02em', color: '#6B7280' }}>WORKSPACE / OVERVIEW</span>
             </div>
 
             <div style={{ display: 'flex', alignItems: 'center', gap: 24 }}>
-
+                <Button type="text" icon={<Bell size={20} style={{ color: '#6B7280' }} />} />
                 <Dropdown menu={profileMenu} placement="bottomRight" trigger={['click']}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 12, cursor: 'pointer', padding: '6px 12px', borderRadius: 'var(--radius-button)', transition: 'background 0.2s', background: 'rgba(255, 255, 255, 0.05)', border: '1px solid rgba(255,255,255,0.1)' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 12, cursor: 'pointer', padding: '6px 12px', borderRadius: 'var(--radius-button)', transition: 'background 0.2s', background: '#F6F6F6', border: '1px solid rgba(4, 2, 34, 0.08)' }}>
                         <div style={{ textAlign: 'right', display: 'flex', flexDirection: 'column', lineHeight: 1.2 }}>
-                            <span style={{ fontSize: 14, fontWeight: 600, color: '#FFFFFF' }}>{user?.name || 'Administrator'}</span>
+                            <span style={{ fontSize: 14, fontWeight: 600, color: '#040222' }}>{user?.name || 'Administrator'}</span>
                             <div style={{ display: 'flex', alignItems: 'center', gap: 4, justifyContent: 'flex-end', marginTop: 3 }}>
-                                <Tag color="cyan" bordered={false} style={{ margin: 0, fontSize: 10, lineHeight: 1.2 }}>{user?.role?.toUpperCase() || 'ADMIN'}</Tag>
+                                <Tag color="red" bordered={false} style={{ margin: 0, fontSize: 10, lineHeight: 1.2 }}>{user?.role?.toUpperCase() || 'ADMIN'}</Tag>
                             </div>
                         </div>
-                        <Avatar style={{ backgroundColor: 'var(--color-primary-action)', color: '#000', fontWeight: 700 }}>{user?.name?.charAt(0) || 'A'}</Avatar>
+                        <Avatar style={{ backgroundColor: '#F11A10', color: '#FFF', fontWeight: 700 }}>{user?.name?.charAt(0) || 'A'}</Avatar>
                     </div>
                 </Dropdown>
             </div>

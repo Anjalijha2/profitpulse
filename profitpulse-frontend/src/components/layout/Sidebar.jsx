@@ -97,10 +97,10 @@ export default function Sidebar() {
             onCollapse={setSidebarCollapsed}
             width={256}
             style={{
-                background: 'rgba(6, 11, 25, 0.6)', /* Translucent dark navy */
-                backdropFilter: 'blur(20px)',
-                WebkitBackdropFilter: 'blur(20px)',
-                borderRight: '1px solid rgba(255, 255, 255, 0.08)',
+                background: 'var(--color-sidebar-bg)',
+                backdropFilter: 'none',
+                WebkitBackdropFilter: 'none',
+                borderRight: 'none',
                 overflow: 'auto',
                 height: '100vh',
                 position: 'fixed',
@@ -108,17 +108,18 @@ export default function Sidebar() {
                 top: 0,
                 bottom: 0,
                 zIndex: 100,
-                boxShadow: '4px 0 24px rgba(0, 0, 0, 0.4)'
+                boxShadow: '4px 0 24px rgba(0, 0, 0, 0.2)'
             }}
             breakpoint="lg"
         >
             <div style={{ height: 64, padding: '14px 20px', display: 'flex', alignItems: 'center' }}>
-                <ProfitPulseLogo collapsed={sidebarCollapsed} size={34} />
+                <ProfitPulseLogo collapsed={sidebarCollapsed} size={34} dark={true} />
             </div>
 
             {/* Global CSS injected styling override for Ant Menu matching variables */}
             <Menu
                 mode="inline"
+                theme="dark"
                 selectedKeys={[location.pathname]}
                 defaultOpenKeys={['dashboards', 'data', 'admin']}
                 items={getMenuItems()}
