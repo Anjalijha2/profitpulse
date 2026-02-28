@@ -18,8 +18,16 @@ export default function ReportCenter() {
         if (values.report_type === 'employee_utilization') endpoint = '/reports/utilization';
 
         try {
+            const params = {
+                month: values.start_month.format('YYYY-MM'),
+                start_month: values.start_month.format('YYYY-MM'),
+                end_month: values.end_month.format('YYYY-MM'),
+                report_type: values.report_type
+            };
+
             const response = await axiosInstance.get(endpoint, {
-                responseType: 'arraybuffer', // Important for downloading files
+                params,
+                responseType: 'arraybuffer',
             });
 
             // Create a blob from the response data

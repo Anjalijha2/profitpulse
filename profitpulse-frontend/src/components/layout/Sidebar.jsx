@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Layout, Menu } from 'antd';
 import { useLocation, useNavigate } from 'react-router-dom';
 import {
-    Users, Briefcase, FileText, UploadCloud, Settings, Database, Activity, Map, PieChart, ShieldAlert, ShieldCheck
+    Users, Briefcase, FileText, UploadCloud, Settings, Database, Activity, Building, PieChart, ShieldAlert, ShieldCheck
 } from 'lucide-react';
 import { useAuthStore } from '../../store/authStore';
 import { useUiStore } from '../../store/uiStore';
@@ -52,7 +52,10 @@ export default function Sidebar() {
         const dataChildren = [];
         if (hasPermission(user?.role, 'uploads')) dataChildren.push({ key: '/upload', icon: <UploadCloud size={18} />, label: 'Upload Center' });
         if (hasPermission(user?.role, 'employees')) dataChildren.push({ key: '/employees', icon: <Users size={18} />, label: 'Employees' });
-        if (hasPermission(user?.role, 'projects')) dataChildren.push({ key: '/projects', icon: <Briefcase size={18} />, label: 'Projects' });
+        if (hasPermission(user?.role, 'projects')) {
+            dataChildren.push({ key: '/projects', icon: <Briefcase size={18} />, label: 'Projects' });
+            dataChildren.push({ key: '/clients', icon: <Building size={18} />, label: 'Clients' });
+        }
         if (hasPermission(user?.role, 'revenue')) dataChildren.push({ key: '/revenue', icon: <Database size={18} />, label: 'Revenue' });
 
         if (dataChildren.length > 0) {

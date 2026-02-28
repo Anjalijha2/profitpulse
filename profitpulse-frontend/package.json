@@ -7,7 +7,13 @@
         "dev": "vite",
         "build": "vite build",
         "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
-        "preview": "vite preview"
+        "preview": "vite preview",
+        "test:e2e": "npx playwright test",
+        "test:e2e:ui": "npx playwright test --ui",
+        "test:e2e:headed": "npx playwright test --headed",
+        "test:e2e:smoke": "npx playwright test e2e/pages/01-login e2e/pages/02-executive e2e/api-tests",
+        "test:e2e:api": "npx playwright test e2e/api-tests",
+        "test:e2e:report": "npx playwright show-report"
     },
     "dependencies": {
         "@ant-design/icons": "^5.3.6",
@@ -25,6 +31,7 @@
         "zustand": "^4.5.2"
     },
     "devDependencies": {
+        "@playwright/test": "^1.58.2",
         "@types/react": "^18.2.66",
         "@types/react-dom": "^18.2.22",
         "@vitejs/plugin-react": "^4.2.1",

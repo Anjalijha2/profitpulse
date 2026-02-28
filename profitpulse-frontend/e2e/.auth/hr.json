@@ -1,0 +1,14 @@
+{
+  "cookies": [],
+  "origins": [
+    {
+      "origin": "http://localhost:3000",
+      "localStorage": [
+        {
+          "name": "auth-storage",
+          "value": "{\"state\":{\"user\":{\"id\":\"f0043a6a-e1e4-49ef-8e47-dbd0a0eed382\",\"name\":\"Pooja Sharma\",\"email\":\"pooja.hr@profitpulse.com\",\"role\":\"hr\",\"department_id\":\"82de7f81-e7cb-4549-8199-a4c9f876d388\"},\"token\":\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImYwMDQzYTZhLWUxZTQtNDllZi04ZTQ3LWRiZDBhMGVlZDM4MiIsInJvbGUiOiJociIsImRlcGFydG1lbnRfaWQiOiI4MmRlN2Y4MS1lN2NiLTQ1NDktODE5OS1hNGM5Zjg3NmQzODgiLCJpYXQiOjE3NzIwMDQwMDksImV4cCI6MTc3MjA5MDQwOX0.dSewGu_K-gJCiIBCZ9BTqzC9_rU5K9v4bTrABP7sfks\",\"isAuthenticated\":true},\"version\":0}"
+        }
+      ]
+    }
+  ]
+}

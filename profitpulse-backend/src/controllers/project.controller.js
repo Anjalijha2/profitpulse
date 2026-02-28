@@ -32,10 +32,79 @@ export const listProjects = asyncHandler(async (req, res) => {
         where,
         limit: Number(limit),
         offset,
+        order: [['createdAt', 'DESC']],
         include: [{ model: db.Client, as: 'client', attributes: ['name'] }]
     });
 
-    res.status(StatusCodes.OK).json({ success: true, message: 'Projects retrieved', data: rows, meta: { total: count, page: Number(page), limit: Number(limit) } });
+    const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+
+    // Global counts for KPI cards (ignoring filters like search/page, but respecting RBAC)
+    const statsWhere = {};
+    if (req.user.role === 'delivery_manager') statsWhere.delivery_manager_id = req.user.id;
+    
+    // Global Total (Live Assets) - All projects excluding cancelled ones
+    const globalTotal = await db.Project.count({ 
+        where: { 
+            ...statsWhere, 
+            status: { [Op.ne]: 'cancelled' } 
+        } 
+    });
+
+    // Active: status is 'active' or 'on_hold' AND (no end date OR end date is today or future)
+    const activeCount = await db.Project.count({ 
+        where: { 
+            ...statsWhere, 
+            status: { [Op.in]: ['active', 'on_hold'] },
+            [Op.or]: [
+                { end_date: null },
+                { end_date: { [Op.gte]: today } }
+            ]
+        } 
+    });
+
+    // Completed: status is 'completed' OR (active/on_hold but end date has passed)
+    const completedCount = await db.Project.count({ 
+        where: { 
+            ...statsWhere, 
+            [Op.or]: [
+                { status: 'completed' },
+                { 
+                    status: { [Op.in]: ['active', 'on_hold'] }, 
+                    end_date: { [Op.lt]: today } 
+                }
+            ]
+        } 
+    });
+
+    // Cancelled: specifically status is 'cancelled'
+    const cancelledCount = await db.Project.count({
+        where: { ...statsWhere, status: 'cancelled' }
+    });
+
+    // Mark projects in the current response as completed visually if date passed
+    const processedRows = rows.map(r => {
+        const item = r.toJSON();
+        // If it's active but the date passed, it's effectively completed for display
+        if ((item.status === 'active' || item.status === 'on_hold') && item.end_date && item.end_date < today) {
+            item.status = 'completed';
+        }
+        return item;
+    });
+
+    res.status(StatusCodes.OK).json({ 
+        success: true, 
+        message: 'Projects retrieved', 
+        data: processedRows, 
+        meta: { 
+            total: count, 
+            page: Number(page), 
+            limit: Number(limit),
+            globalTotal,
+            activeCount,
+            completedCount,
+            cancelledCount
+        } 
+    });
 });
 
 export const getProject = asyncHandler(async (req, res) => {
@@ -235,4 +304,17 @@ export const getProjectBurnRate = asyncHandler(async (req, res) => {
             monthly_breakdown
         }
     });
+});
+
+export const deleteProject = asyncHandler(async (req, res) => {
+    const project = await db.Project.findByPk(req.params.id);
+    if (!project) return res.status(StatusCodes.NOT_FOUND).json({ success: false, message: 'Project not found' });
+
+    // RBAC
+    if (req.user.role === 'delivery_manager' && project.delivery_manager_id !== req.user.id) {
+        return res.status(StatusCodes.FORBIDDEN).json({ success: false, message: 'Access denied' });
+    }
+
+    await project.destroy(); // Soft delete
+    res.status(StatusCodes.OK).json({ success: true, message: 'Project deleted successfully' });
 });

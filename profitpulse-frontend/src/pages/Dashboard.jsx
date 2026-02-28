@@ -1,7 +1,7 @@
 import { Row, Col, Typography, Card, Skeleton, Select, DatePicker } from 'antd';
 import { useQuery } from '@tanstack/react-query';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer, LineChart, Line, AreaChart, Area } from 'recharts';
-import { DollarSign, Briefcase, Users, Target } from 'lucide-react';
+import { IndianRupee, Briefcase, Users, Target } from 'lucide-react';
 import StatCard from '../components/StatCard';
 import { apiClient } from '../api/client';
 import dayjs from 'dayjs';
@@ -79,7 +79,7 @@ export default function Dashboard() {
                         prefix="$"
                         trend="up"
                         trendValue="12.5"
-                        icon={<DollarSign size={20} />}
+                        icon={<IndianRupee size={20} />}
                         loading={isLoading}
                     />
                 </Col>

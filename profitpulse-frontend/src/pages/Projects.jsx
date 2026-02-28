@@ -2,18 +2,21 @@ import { useState } from 'react';
 import { Typography, Table, Button, Input, Tag, Select, Drawer, Form, Modal, message } from 'antd';
 import { Plus, Search, Download, MoreHorizontal } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
-import { apiClient } from '../api/client';
+import { axiosInstance } from '../api/axiosInstance';
 import dayjs from 'dayjs';
+import { tablePagination } from '../utils/pagination';
 
 const { Title, Text } = Typography;
 
 export default function Projects() {
     const [searchText, setSearchText] = useState('');
+    const [currentPage, setCurrentPage] = useState(1);
+    const [pageSize, setPageSize] = useState(5);
 
     const { data: response, isLoading } = useQuery({
         queryKey: ['projects'],
         queryFn: async () => {
-            const res = await apiClient.get('/projects');
+            const res = await axiosInstance.get('/projects');
             return res.data;
         }
     });
@@ -75,7 +78,7 @@ export default function Projects() {
         },
     ];
 
-    const projects = response?.data?.items || [];
+    const projects = response || [];
     const filteredProjects = projects.filter(p =>
         p.name?.toLowerCase().includes(searchText.toLowerCase()) ||
         p.project_code?.toLowerCase().includes(searchText.toLowerCase())
@@ -122,7 +125,7 @@ export default function Projects() {
                     dataSource={filteredProjects}
                     rowKey="id"
                     loading={isLoading}
-                    pagination={{ pageSize: 10, showSizeChanger: true }}
+                    pagination={tablePagination(filteredProjects.length, currentPage, pageSize, (page, size) => { setCurrentPage(page); setPageSize(size); })}
                 />
             </div>
         </div>

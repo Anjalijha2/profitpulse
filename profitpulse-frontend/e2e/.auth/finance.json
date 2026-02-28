@@ -1,0 +1,14 @@
+{
+  "cookies": [],
+  "origins": [
+    {
+      "origin": "http://localhost:3000",
+      "localStorage": [
+        {
+          "name": "auth-storage",
+          "value": "{\"state\":{\"user\":{\"id\":\"8fba7bc2-482d-406c-a79e-4a451f95d2ab\",\"name\":\"Ritu Kapoor\",\"email\":\"ritu.finance@profitpulse.com\",\"role\":\"finance\",\"department_id\":\"814f9892-138c-43ce-a146-63fac372fff6\"},\"token\":\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjhmYmE3YmMyLTQ4MmQtNDA2Yy1hNzllLTRhNDUxZjk1ZDJhYiIsInJvbGUiOiJmaW5hbmNlIiwiZGVwYXJ0bWVudF9pZCI6IjgxNGY5ODkyLTEzOGMtNDNjZS1hMTQ2LTYzZmFjMzcyZmZmNiIsImlhdCI6MTc3MjAyMTUxMCwiZXhwIjoxNzcyMTA3OTEwfQ.eSDQ9BzyxU570Y4JD21wPIBC5G8-vrsZP9wuI-VyPao\",\"isAuthenticated\":true},\"version\":0}"
+        }
+      ]
+    }
+  ]
+}

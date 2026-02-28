@@ -43,7 +43,7 @@ export default function AppHeader() {
             </div>
 
             <div style={{ display: 'flex', alignItems: 'center', gap: 24 }}>
-                <Button type="text" icon={<Bell size={20} style={{ color: 'rgba(255,255,255,0.6)' }} />} />
+
                 <Dropdown menu={profileMenu} placement="bottomRight" trigger={['click']}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 12, cursor: 'pointer', padding: '6px 12px', borderRadius: 'var(--radius-button)', transition: 'background 0.2s', background: 'rgba(255, 255, 255, 0.05)', border: '1px solid rgba(255,255,255,0.1)' }}>
                         <div style={{ textAlign: 'right', display: 'flex', flexDirection: 'column', lineHeight: 1.2 }}>

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Card, Typography, Form, InputNumber, Button, message, Spin, Tabs } from 'antd';
-import { Save, DollarSign, Settings, Link } from 'lucide-react';
+import { Save, IndianRupee, Settings, Link } from 'lucide-react';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { axiosInstance } from '../../api/axiosInstance';
 
@@ -55,7 +55,7 @@ export default function SystemConfig() {
     const items = [
         {
             key: 'financials',
-            label: <span style={{ display: 'flex', alignItems: 'center', gap: 8 }}><DollarSign size={16} /> Financials</span>,
+            label: <span style={{ display: 'flex', alignItems: 'center', gap: 8 }}><IndianRupee size={16} /> Financials</span>,
             children: (
                 <div style={{ paddingTop: 16 }}>
                     <Form form={form} layout="vertical" onFinish={onFinish}>

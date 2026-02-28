@@ -1,7 +1,7 @@
 import { Row, Col, Typography, Card, Skeleton, Select, DatePicker } from 'antd';
 import { useQuery } from '@tanstack/react-query';
 import { AreaChart, Area, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer, Cell } from 'recharts';
-import { DollarSign, Briefcase, Users, Target } from 'lucide-react';
+import { IndianRupee, Briefcase, Users, Target } from 'lucide-react';
 import KPICard from '../../components/common/KPICard';
 import ChartCard from '../../components/common/ChartCard';
 import { axiosInstance } from '../../api/axiosInstance';
@@ -69,9 +69,9 @@ export default function ExecutiveDashboard() {
                     <KPICard
                         title="Total Revenue"
                         value={formatINRCompact(data?.total_revenue ?? 0)}
-                        trend={data?.total_revenue > 0 ? 'up' : null}
-                        trendLabel={data?.total_revenue > 0 ? '12.5% vs Prev' : null}
-                        icon={<DollarSign size={20} />}
+                        trend={data?.trends?.revenue > 0 ? 'up' : data?.trends?.revenue < 0 ? 'down' : null}
+                        trendLabel={data?.trends?.revenue ? `${Math.abs(data.trends.revenue)}% vs Prev` : null}
+                        icon={<IndianRupee size={20} />}
                         color="blue"
                         loading={isLoading}
                     />
@@ -80,8 +80,8 @@ export default function ExecutiveDashboard() {
                     <KPICard
                         title="Total Cost"
                         value={formatINRCompact(data?.total_cost ?? 0)}
-                        trend={data?.total_cost > 0 ? 'down' : null}
-                        trendLabel={data?.total_cost > 0 ? '3.2% vs Prev' : null}
+                        trend={data?.trends?.cost > 0 ? 'down' : data?.trends?.cost < 0 ? 'up' : null}
+                        trendLabel={data?.trends?.cost ? `${Math.abs(data.trends.cost)}% vs Prev` : null}
                         icon={<Briefcase size={20} />}
                         color="red"
                         loading={isLoading}
@@ -92,8 +92,8 @@ export default function ExecutiveDashboard() {
                         title="Net Margin"
                         value={data?.gross_margin_percent ?? 0}
                         suffix="%"
-                        trend={data?.gross_margin_percent > 0 ? 'up' : null}
-                        trendLabel={data?.gross_margin_percent > 0 ? '4.1% vs Prev' : null}
+                        trend={data?.trends?.margin > 0 ? 'up' : data?.trends?.margin < 0 ? 'down' : null}
+                        trendLabel={data?.trends?.margin ? `${Math.abs(data.trends.margin)} pts vs Prev` : null}
                         icon={<Target size={20} />}
                         color="green"
                         loading={isLoading}
@@ -104,8 +104,8 @@ export default function ExecutiveDashboard() {
                         title="Utilization"
                         value={data?.utilization_percent ?? 0}
                         suffix="%"
-                        trend={data?.utilization_percent > 0 ? 'up' : null}
-                        trendLabel={data?.utilization_percent > 0 ? '1.8% vs Prev' : null}
+                        trend={data?.trends?.utilization > 0 ? 'up' : data?.trends?.utilization < 0 ? 'down' : null}
+                        trendLabel={data?.trends?.utilization ? `${Math.abs(data.trends.utilization)} pts vs Prev` : null}
                         icon={<Users size={20} />}
                         color="blue"
                         loading={isLoading}

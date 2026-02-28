@@ -29,3 +29,5 @@ process.on('unhandledRejection', (err) => {
     // Close server & exit process
     server.close(() => process.exit(1));
 });
+
+// Trigger nodemon restart

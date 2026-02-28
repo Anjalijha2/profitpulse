@@ -1,16 +1,19 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Card, Typography, Spin, Row, Col, Descriptions, Table, Button, Tag, Avatar, Space, Statistic, Divider } from 'antd';
 import { useQuery } from '@tanstack/react-query';
 import { axiosInstance } from '../../api/axiosInstance';
 import { ArrowLeft, User, Building2, Briefcase } from 'lucide-react';
 import { formatCurrency, formatDate } from '../../utils/formatters';
+import { tablePagination } from '../../utils/pagination';
 
 const { Title, Text } = Typography;
 
 export default function EmployeeDetail() {
     const { id } = useParams();
     const navigate = useNavigate();
+    const [currentPage, setCurrentPage] = useState(1);
+    const [pageSize, setPageSize] = useState(5);
 
     const { data: qData, isLoading: empLoading } = useQuery({
         queryKey: ['employee', id],
@@ -157,7 +160,7 @@ export default function EmployeeDetail() {
                             dataSource={timesheets}
                             columns={tsColumns}
                             rowKey="id"
-                            pagination={{ pageSize: 8 }}
+                            pagination={tablePagination(timesheets.length, currentPage, pageSize, (page, size) => { setCurrentPage(page); setPageSize(size); })}
                         />
                     </Card>
                 </Col>

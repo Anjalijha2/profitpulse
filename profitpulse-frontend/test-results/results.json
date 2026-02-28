@@ -1,0 +1,544 @@
+{
+  "config": {
+    "configFile": "C:\\Users\\Anjali\\OneDrive\\Desktop\\profitpulse\\profitpulse\\profitpulse-frontend\\playwright.config.js",
+    "rootDir": "C:/Users/Anjali/OneDrive/Desktop/profitpulse/profitpulse/profitpulse-frontend/e2e",
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "C:/Users/Anjali/OneDrive/Desktop/profitpulse/profitpulse/profitpulse-frontend/test-results",
+        "repeatEach": 1,
+        "retries": 1,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "auth-setup",
+        "name": "auth-setup",
+        "testDir": "C:/Users/Anjali/OneDrive/Desktop/profitpulse/profitpulse/profitpulse-frontend/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "/auth\\.setup\\.js/"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "C:/Users/Anjali/OneDrive/Desktop/profitpulse/profitpulse/profitpulse-frontend/test-results",
+        "repeatEach": 1,
+        "retries": 1,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "chromium",
+        "name": "chromium",
+        "testDir": "C:/Users/Anjali/OneDrive/Desktop/profitpulse/profitpulse/profitpulse-frontend/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "html",
+        {
+          "outputFolder": "playwright-report",
+          "open": "never"
+        }
+      ],
+      [
+        "json",
+        {
+          "outputFile": "test-results/results.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "runAgents": "none",
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.58.2",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "auth.setup.js",
+      "file": "auth.setup.js",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "authenticate as admin",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "auth-setup",
+              "projectName": "auth-setup",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 5896,
+                  "error": {
+                    "message": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:3000/login\nCall log:\n\u001b[2m  - navigating to \"http://localhost:3000/login\", waiting until \"load\"\u001b[22m\n",
+                    "stack": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:3000/login\nCall log:\n\u001b[2m  - navigating to \"http://localhost:3000/login\", waiting until \"load\"\u001b[22m\n\n    at C:\\Users\\Anjali\\OneDrive\\Desktop\\profitpulse\\profitpulse\\profitpulse-frontend\\e2e\\auth.setup.js:18:16",
+                    "location": {
+                      "file": "C:\\Users\\Anjali\\OneDrive\\Desktop\\profitpulse\\profitpulse\\profitpulse-frontend\\e2e\\auth.setup.js",
+                      "column": 16,
+                      "line": 18
+                    },
+                    "snippet": "\u001b[0m \u001b[90m 16 |\u001b[39m \u001b[36mfor\u001b[39m (\u001b[36mconst\u001b[39m user \u001b[36mof\u001b[39m users) {\n \u001b[90m 17 |\u001b[39m   setup(\u001b[32m`authenticate as ${user.role}`\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 18 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgoto(\u001b[32m'/login'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 19 |\u001b[39m     \u001b[36mconst\u001b[39m emailInput \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'input[type=\"email\"], #login_email, input[name=\"email\"], input[id*=\"email\"]'\u001b[39m)\u001b[33m.\u001b[39mfirst()\u001b[33m;\u001b[39m\n \u001b[90m 20 |\u001b[39m     \u001b[36mconst\u001b[39m passInput \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'input[type=\"password\"], #login_password, input[name=\"password\"], input[id*=\"password\"]'\u001b[39m)\u001b[33m.\u001b[39mfirst()\u001b[33m;\u001b[39m\n \u001b[90m 21 |\u001b[39m     \u001b[36mawait\u001b[39m emailInput\u001b[33m.\u001b[39mwaitFor({ state\u001b[33m:\u001b[39m \u001b[32m'visible'\u001b[39m\u001b[33m,\u001b[39m timeout\u001b[33m:\u001b[39m \u001b[35m10000\u001b[39m })\u001b[33m;\u001b[39m\u001b[0m"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "C:\\Users\\Anjali\\OneDrive\\Desktop\\profitpulse\\profitpulse\\profitpulse-frontend\\e2e\\auth.setup.js",
+                        "column": 16,
+                        "line": 18
+                      },
+                      "message": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:3000/login\nCall log:\n\u001b[2m  - navigating to \"http://localhost:3000/login\", waiting until \"load\"\u001b[22m\n\n\n\u001b[0m \u001b[90m 16 |\u001b[39m \u001b[36mfor\u001b[39m (\u001b[36mconst\u001b[39m user \u001b[36mof\u001b[39m users) {\n \u001b[90m 17 |\u001b[39m   setup(\u001b[32m`authenticate as ${user.role}`\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 18 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgoto(\u001b[32m'/login'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 19 |\u001b[39m     \u001b[36mconst\u001b[39m emailInput \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'input[type=\"email\"], #login_email, input[name=\"email\"], input[id*=\"email\"]'\u001b[39m)\u001b[33m.\u001b[39mfirst()\u001b[33m;\u001b[39m\n \u001b[90m 20 |\u001b[39m     \u001b[36mconst\u001b[39m passInput \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'input[type=\"password\"], #login_password, input[name=\"password\"], input[id*=\"password\"]'\u001b[39m)\u001b[33m.\u001b[39mfirst()\u001b[33m;\u001b[39m\n \u001b[90m 21 |\u001b[39m     \u001b[36mawait\u001b[39m emailInput\u001b[33m.\u001b[39mwaitFor({ state\u001b[33m:\u001b[39m \u001b[32m'visible'\u001b[39m\u001b[33m,\u001b[39m timeout\u001b[33m:\u001b[39m \u001b[35m10000\u001b[39m })\u001b[33m;\u001b[39m\u001b[0m\n\u001b[2m    at C:\\Users\\Anjali\\OneDrive\\Desktop\\profitpulse\\profitpulse\\profitpulse-frontend\\e2e\\auth.setup.js:18:16\u001b[22m"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-02-25T12:14:45.855Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "C:\\Users\\Anjali\\OneDrive\\Desktop\\profitpulse\\profitpulse\\profitpulse-frontend\\test-results\\auth.setup.js-authenticate-as-admin-auth-setup\\test-failed-1.png"
+                    },
+                    {
+                      "name": "video",
+                      "contentType": "video/webm",
+                      "path": "C:\\Users\\Anjali\\OneDrive\\Desktop\\profitpulse\\profitpulse\\profitpulse-frontend\\test-results\\auth.setup.js-authenticate-as-admin-auth-setup\\video.webm"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "C:\\Users\\Anjali\\OneDrive\\Desktop\\profitpulse\\profitpulse\\profitpulse-frontend\\e2e\\auth.setup.js",
+                    "column": 16,
+                    "line": 18
+                  }
+                },
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 11240,
+                  "error": {
+                    "message": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:3000/login\nCall log:\n\u001b[2m  - navigating to \"http://localhost:3000/login\", waiting until \"load\"\u001b[22m\n",
+                    "stack": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:3000/login\nCall log:\n\u001b[2m  - navigating to \"http://localhost:3000/login\", waiting until \"load\"\u001b[22m\n\n    at C:\\Users\\Anjali\\OneDrive\\Desktop\\profitpulse\\profitpulse\\profitpulse-frontend\\e2e\\auth.setup.js:18:16",
+                    "location": {
+                      "file": "C:\\Users\\Anjali\\OneDrive\\Desktop\\profitpulse\\profitpulse\\profitpulse-frontend\\e2e\\auth.setup.js",
+                      "column": 16,
+                      "line": 18
+                    },
+                    "snippet": "\u001b[0m \u001b[90m 16 |\u001b[39m \u001b[36mfor\u001b[39m (\u001b[36mconst\u001b[39m user \u001b[36mof\u001b[39m users) {\n \u001b[90m 17 |\u001b[39m   setup(\u001b[32m`authenticate as ${user.role}`\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 18 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgoto(\u001b[32m'/login'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 19 |\u001b[39m     \u001b[36mconst\u001b[39m emailInput \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'input[type=\"email\"], #login_email, input[name=\"email\"], input[id*=\"email\"]'\u001b[39m)\u001b[33m.\u001b[39mfirst()\u001b[33m;\u001b[39m\n \u001b[90m 20 |\u001b[39m     \u001b[36mconst\u001b[39m passInput \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'input[type=\"password\"], #login_password, input[name=\"password\"], input[id*=\"password\"]'\u001b[39m)\u001b[33m.\u001b[39mfirst()\u001b[33m;\u001b[39m\n \u001b[90m 21 |\u001b[39m     \u001b[36mawait\u001b[39m emailInput\u001b[33m.\u001b[39mwaitFor({ state\u001b[33m:\u001b[39m \u001b[32m'visible'\u001b[39m\u001b[33m,\u001b[39m timeout\u001b[33m:\u001b[39m \u001b[35m10000\u001b[39m })\u001b[33m;\u001b[39m\u001b[0m"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "C:\\Users\\Anjali\\OneDrive\\Desktop\\profitpulse\\profitpulse\\profitpulse-frontend\\e2e\\auth.setup.js",
+                        "column": 16,
+                        "line": 18
+                      },
+                      "message": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:3000/login\nCall log:\n\u001b[2m  - navigating to \"http://localhost:3000/login\", waiting until \"load\"\u001b[22m\n\n\n\u001b[0m \u001b[90m 16 |\u001b[39m \u001b[36mfor\u001b[39m (\u001b[36mconst\u001b[39m user \u001b[36mof\u001b[39m users) {\n \u001b[90m 17 |\u001b[39m   setup(\u001b[32m`authenticate as ${user.role}`\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 18 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgoto(\u001b[32m'/login'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 19 |\u001b[39m     \u001b[36mconst\u001b[39m emailInput \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'input[type=\"email\"], #login_email, input[name=\"email\"], input[id*=\"email\"]'\u001b[39m)\u001b[33m.\u001b[39mfirst()\u001b[33m;\u001b[39m\n \u001b[90m 20 |\u001b[39m     \u001b[36mconst\u001b[39m passInput \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'input[type=\"password\"], #login_password, input[name=\"password\"], input[id*=\"password\"]'\u001b[39m)\u001b[33m.\u001b[39mfirst()\u001b[33m;\u001b[39m\n \u001b[90m 21 |\u001b[39m     \u001b[36mawait\u001b[39m emailInput\u001b[33m.\u001b[39mwaitFor({ state\u001b[33m:\u001b[39m \u001b[32m'visible'\u001b[39m\u001b[33m,\u001b[39m timeout\u001b[33m:\u001b[39m \u001b[35m10000\u001b[39m })\u001b[33m;\u001b[39m\u001b[0m\n\u001b[2m    at C:\\Users\\Anjali\\OneDrive\\Desktop\\profitpulse\\profitpulse\\profitpulse-frontend\\e2e\\auth.setup.js:18:16\u001b[22m"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 1,
+                  "startTime": "2026-02-25T12:15:12.434Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "C:\\Users\\Anjali\\OneDrive\\Desktop\\profitpulse\\profitpulse\\profitpulse-frontend\\test-results\\auth.setup.js-authenticate-as-admin-auth-setup-retry1\\test-failed-1.png"
+                    },
+                    {
+                      "name": "video",
+                      "contentType": "video/webm",
+                      "path": "C:\\Users\\Anjali\\OneDrive\\Desktop\\profitpulse\\profitpulse\\profitpulse-frontend\\test-results\\auth.setup.js-authenticate-as-admin-auth-setup-retry1\\video.webm"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "C:\\Users\\Anjali\\OneDrive\\Desktop\\profitpulse\\profitpulse\\profitpulse-frontend\\test-results\\auth.setup.js-authenticate-as-admin-auth-setup-retry1\\trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "C:\\Users\\Anjali\\OneDrive\\Desktop\\profitpulse\\profitpulse\\profitpulse-frontend\\e2e\\auth.setup.js",
+                    "column": 16,
+                    "line": 18
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "f376efe52c54b1a876fd-ec7833b80d71398811f1",
+          "file": "auth.setup.js",
+          "line": 17,
+          "column": 3
+        },
+        {
+          "title": "authenticate as finance",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "auth-setup",
+              "projectName": "auth-setup",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 5462,
+                  "error": {
+                    "message": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:3000/login\nCall log:\n\u001b[2m  - navigating to \"http://localhost:3000/login\", waiting until \"load\"\u001b[22m\n",
+                    "stack": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:3000/login\nCall log:\n\u001b[2m  - navigating to \"http://localhost:3000/login\", waiting until \"load\"\u001b[22m\n\n    at C:\\Users\\Anjali\\OneDrive\\Desktop\\profitpulse\\profitpulse\\profitpulse-frontend\\e2e\\auth.setup.js:18:16",
+                    "location": {
+                      "file": "C:\\Users\\Anjali\\OneDrive\\Desktop\\profitpulse\\profitpulse\\profitpulse-frontend\\e2e\\auth.setup.js",
+                      "column": 16,
+                      "line": 18
+                    },
+                    "snippet": "\u001b[0m \u001b[90m 16 |\u001b[39m \u001b[36mfor\u001b[39m (\u001b[36mconst\u001b[39m user \u001b[36mof\u001b[39m users) {\n \u001b[90m 17 |\u001b[39m   setup(\u001b[32m`authenticate as ${user.role}`\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 18 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgoto(\u001b[32m'/login'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 19 |\u001b[39m     \u001b[36mconst\u001b[39m emailInput \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'input[type=\"email\"], #login_email, input[name=\"email\"], input[id*=\"email\"]'\u001b[39m)\u001b[33m.\u001b[39mfirst()\u001b[33m;\u001b[39m\n \u001b[90m 20 |\u001b[39m     \u001b[36mconst\u001b[39m passInput \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'input[type=\"password\"], #login_password, input[name=\"password\"], input[id*=\"password\"]'\u001b[39m)\u001b[33m.\u001b[39mfirst()\u001b[33m;\u001b[39m\n \u001b[90m 21 |\u001b[39m     \u001b[36mawait\u001b[39m emailInput\u001b[33m.\u001b[39mwaitFor({ state\u001b[33m:\u001b[39m \u001b[32m'visible'\u001b[39m\u001b[33m,\u001b[39m timeout\u001b[33m:\u001b[39m \u001b[35m10000\u001b[39m })\u001b[33m;\u001b[39m\u001b[0m"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "C:\\Users\\Anjali\\OneDrive\\Desktop\\profitpulse\\profitpulse\\profitpulse-frontend\\e2e\\auth.setup.js",
+                        "column": 16,
+                        "line": 18
+                      },
+                      "message": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:3000/login\nCall log:\n\u001b[2m  - navigating to \"http://localhost:3000/login\", waiting until \"load\"\u001b[22m\n\n\n\u001b[0m \u001b[90m 16 |\u001b[39m \u001b[36mfor\u001b[39m (\u001b[36mconst\u001b[39m user \u001b[36mof\u001b[39m users) {\n \u001b[90m 17 |\u001b[39m   setup(\u001b[32m`authenticate as ${user.role}`\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 18 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgoto(\u001b[32m'/login'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 19 |\u001b[39m     \u001b[36mconst\u001b[39m emailInput \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'input[type=\"email\"], #login_email, input[name=\"email\"], input[id*=\"email\"]'\u001b[39m)\u001b[33m.\u001b[39mfirst()\u001b[33m;\u001b[39m\n \u001b[90m 20 |\u001b[39m     \u001b[36mconst\u001b[39m passInput \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'input[type=\"password\"], #login_password, input[name=\"password\"], input[id*=\"password\"]'\u001b[39m)\u001b[33m.\u001b[39mfirst()\u001b[33m;\u001b[39m\n \u001b[90m 21 |\u001b[39m     \u001b[36mawait\u001b[39m emailInput\u001b[33m.\u001b[39mwaitFor({ state\u001b[33m:\u001b[39m \u001b[32m'visible'\u001b[39m\u001b[33m,\u001b[39m timeout\u001b[33m:\u001b[39m \u001b[35m10000\u001b[39m })\u001b[33m;\u001b[39m\u001b[0m\n\u001b[2m    at C:\\Users\\Anjali\\OneDrive\\Desktop\\profitpulse\\profitpulse\\profitpulse-frontend\\e2e\\auth.setup.js:18:16\u001b[22m"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-02-25T12:15:33.577Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "C:\\Users\\Anjali\\OneDrive\\Desktop\\profitpulse\\profitpulse\\profitpulse-frontend\\test-results\\auth.setup.js-authenticate-as-finance-auth-setup\\test-failed-1.png"
+                    },
+                    {
+                      "name": "video",
+                      "contentType": "video/webm",
+                      "path": "C:\\Users\\Anjali\\OneDrive\\Desktop\\profitpulse\\profitpulse\\profitpulse-frontend\\test-results\\auth.setup.js-authenticate-as-finance-auth-setup\\video.webm"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "C:\\Users\\Anjali\\OneDrive\\Desktop\\profitpulse\\profitpulse\\profitpulse-frontend\\e2e\\auth.setup.js",
+                    "column": 16,
+                    "line": 18
+                  }
+                },
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 5712,
+                  "error": {
+                    "message": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:3000/login\nCall log:\n\u001b[2m  - navigating to \"http://localhost:3000/login\", waiting until \"load\"\u001b[22m\n",
+                    "stack": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:3000/login\nCall log:\n\u001b[2m  - navigating to \"http://localhost:3000/login\", waiting until \"load\"\u001b[22m\n\n    at C:\\Users\\Anjali\\OneDrive\\Desktop\\profitpulse\\profitpulse\\profitpulse-frontend\\e2e\\auth.setup.js:18:16",
+                    "location": {
+                      "file": "C:\\Users\\Anjali\\OneDrive\\Desktop\\profitpulse\\profitpulse\\profitpulse-frontend\\e2e\\auth.setup.js",
+                      "column": 16,
+                      "line": 18
+                    },
+                    "snippet": "\u001b[0m \u001b[90m 16 |\u001b[39m \u001b[36mfor\u001b[39m (\u001b[36mconst\u001b[39m user \u001b[36mof\u001b[39m users) {\n \u001b[90m 17 |\u001b[39m   setup(\u001b[32m`authenticate as ${user.role}`\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 18 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgoto(\u001b[32m'/login'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 19 |\u001b[39m     \u001b[36mconst\u001b[39m emailInput \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'input[type=\"email\"], #login_email, input[name=\"email\"], input[id*=\"email\"]'\u001b[39m)\u001b[33m.\u001b[39mfirst()\u001b[33m;\u001b[39m\n \u001b[90m 20 |\u001b[39m     \u001b[36mconst\u001b[39m passInput \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'input[type=\"password\"], #login_password, input[name=\"password\"], input[id*=\"password\"]'\u001b[39m)\u001b[33m.\u001b[39mfirst()\u001b[33m;\u001b[39m\n \u001b[90m 21 |\u001b[39m     \u001b[36mawait\u001b[39m emailInput\u001b[33m.\u001b[39mwaitFor({ state\u001b[33m:\u001b[39m \u001b[32m'visible'\u001b[39m\u001b[33m,\u001b[39m timeout\u001b[33m:\u001b[39m \u001b[35m10000\u001b[39m })\u001b[33m;\u001b[39m\u001b[0m"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "C:\\Users\\Anjali\\OneDrive\\Desktop\\profitpulse\\profitpulse\\profitpulse-frontend\\e2e\\auth.setup.js",
+                        "column": 16,
+                        "line": 18
+                      },
+                      "message": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:3000/login\nCall log:\n\u001b[2m  - navigating to \"http://localhost:3000/login\", waiting until \"load\"\u001b[22m\n\n\n\u001b[0m \u001b[90m 16 |\u001b[39m \u001b[36mfor\u001b[39m (\u001b[36mconst\u001b[39m user \u001b[36mof\u001b[39m users) {\n \u001b[90m 17 |\u001b[39m   setup(\u001b[32m`authenticate as ${user.role}`\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 18 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgoto(\u001b[32m'/login'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 19 |\u001b[39m     \u001b[36mconst\u001b[39m emailInput \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'input[type=\"email\"], #login_email, input[name=\"email\"], input[id*=\"email\"]'\u001b[39m)\u001b[33m.\u001b[39mfirst()\u001b[33m;\u001b[39m\n \u001b[90m 20 |\u001b[39m     \u001b[36mconst\u001b[39m passInput \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'input[type=\"password\"], #login_password, input[name=\"password\"], input[id*=\"password\"]'\u001b[39m)\u001b[33m.\u001b[39mfirst()\u001b[33m;\u001b[39m\n \u001b[90m 21 |\u001b[39m     \u001b[36mawait\u001b[39m emailInput\u001b[33m.\u001b[39mwaitFor({ state\u001b[33m:\u001b[39m \u001b[32m'visible'\u001b[39m\u001b[33m,\u001b[39m timeout\u001b[33m:\u001b[39m \u001b[35m10000\u001b[39m })\u001b[33m;\u001b[39m\u001b[0m\n\u001b[2m    at C:\\Users\\Anjali\\OneDrive\\Desktop\\profitpulse\\profitpulse\\profitpulse-frontend\\e2e\\auth.setup.js:18:16\u001b[22m"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 1,
+                  "startTime": "2026-02-25T12:15:58.327Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "C:\\Users\\Anjali\\OneDrive\\Desktop\\profitpulse\\profitpulse\\profitpulse-frontend\\test-results\\auth.setup.js-authenticate-as-finance-auth-setup-retry1\\test-failed-1.png"
+                    },
+                    {
+                      "name": "video",
+                      "contentType": "video/webm",
+                      "path": "C:\\Users\\Anjali\\OneDrive\\Desktop\\profitpulse\\profitpulse\\profitpulse-frontend\\test-results\\auth.setup.js-authenticate-as-finance-auth-setup-retry1\\video.webm"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "C:\\Users\\Anjali\\OneDrive\\Desktop\\profitpulse\\profitpulse\\profitpulse-frontend\\test-results\\auth.setup.js-authenticate-as-finance-auth-setup-retry1\\trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "C:\\Users\\Anjali\\OneDrive\\Desktop\\profitpulse\\profitpulse\\profitpulse-frontend\\e2e\\auth.setup.js",
+                    "column": 16,
+                    "line": 18
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "f376efe52c54b1a876fd-1b0b34b9d8821471bb65",
+          "file": "auth.setup.js",
+          "line": 17,
+          "column": 3
+        },
+        {
+          "title": "authenticate as delivery_manager",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "auth-setup",
+              "projectName": "auth-setup",
+              "results": [],
+              "status": "skipped"
+            }
+          ],
+          "id": "f376efe52c54b1a876fd-8c2c18ea9d45de0b78b1",
+          "file": "auth.setup.js",
+          "line": 17,
+          "column": 3
+        },
+        {
+          "title": "authenticate as department_head",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "auth-setup",
+              "projectName": "auth-setup",
+              "results": [],
+              "status": "skipped"
+            }
+          ],
+          "id": "f376efe52c54b1a876fd-80dcd0babc0f6aa8a599",
+          "file": "auth.setup.js",
+          "line": 17,
+          "column": 3
+        },
+        {
+          "title": "authenticate as hr",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "auth-setup",
+              "projectName": "auth-setup",
+              "results": [],
+              "status": "skipped"
+            }
+          ],
+          "id": "f376efe52c54b1a876fd-e35942e6f7058e330eeb",
+          "file": "auth.setup.js",
+          "line": 17,
+          "column": 3
+        }
+      ]
+    },
+    {
+      "title": "pages\\02-executive-dashboard.spec.js",
+      "file": "pages/02-executive-dashboard.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Executive Dashboard",
+          "file": "pages/02-executive-dashboard.spec.js",
+          "line": 3,
+          "column": 6,
+          "specs": [
+            {
+              "title": "page title is visible",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "db8fdf6c46f1825b9f06-635f2fc7178dae46f4fc",
+              "file": "pages/02-executive-dashboard.spec.js",
+              "line": 9,
+              "column": 3
+            },
+            {
+              "title": "4 KPI cards are visible",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "db8fdf6c46f1825b9f06-003388cec9c738233511",
+              "file": "pages/02-executive-dashboard.spec.js",
+              "line": 13,
+              "column": 3
+            },
+            {
+              "title": "KPI cards contain non-zero values with ₹ currency",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "db8fdf6c46f1825b9f06-3e39d02efdfcc0b1ea91",
+              "file": "pages/02-executive-dashboard.spec.js",
+              "line": 20,
+              "column": 3
+            },
+            {
+              "title": "Monthly Profitability Trend chart renders",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "db8fdf6c46f1825b9f06-42982892418047c714d3",
+              "file": "pages/02-executive-dashboard.spec.js",
+              "line": 28,
+              "column": 3
+            },
+            {
+              "title": "Top Projects by Margin section is visible",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "db8fdf6c46f1825b9f06-3e43f5ff47efc64754c9",
+              "file": "pages/02-executive-dashboard.spec.js",
+              "line": 35,
+              "column": 3
+            },
+            {
+              "title": "month filter DatePicker exists",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "db8fdf6c46f1825b9f06-f2f62411ecc02f02f006",
+              "file": "pages/02-executive-dashboard.spec.js",
+              "line": 39,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-02-25T12:14:36.175Z",
+    "duration": 98050.53099999999,
+    "expected": 0,
+    "skipped": 9,
+    "unexpected": 2,
+    "flaky": 0
+  }
+}

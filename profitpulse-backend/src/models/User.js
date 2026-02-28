@@ -39,6 +39,14 @@ export default (sequelize, DataTypes) => {
             type: DataTypes.DATE,
             allowNull: true,
         },
+        reset_token: {
+            type: DataTypes.STRING(255),
+            allowNull: true,
+        },
+        reset_token_expires_at: {
+            type: DataTypes.DATE,
+            allowNull: true,
+        },
     }, {
         tableName: 'users',
         underscored: true,

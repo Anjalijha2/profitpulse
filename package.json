@@ -2,5 +2,29 @@
   "dependencies": {
     "aws-sdk": "^2.1693.0",
     "mysql2": "^3.17.4"
+  },
+  "name": "profitpulse",
+  "version": "1.0.0",
+  "description": "**ProfitPulse** is a comprehensive Profitability Intelligence System designed to provide deep insights into project, employee, and department-level profitability. It features a robust Role-Based Access Control (RBAC) system, dynamic dashboards, and high-performance data processing.",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Anjalijha2/profitpulse.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Anjalijha2/profitpulse/issues"
+  },
+  "homepage": "https://github.com/Anjalijha2/profitpulse#readme",
+  "devDependencies": {
+    "@playwright/test": "^1.58.2",
+    "@types/node": "^25.3.0"
   }
 }

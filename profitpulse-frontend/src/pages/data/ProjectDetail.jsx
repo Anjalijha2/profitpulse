@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { Card, Typography, Spin, Row, Col, Descriptions, Button, Tag, Avatar, Space, Statistic, Divider, Progress } from 'antd';
 import { useQuery } from '@tanstack/react-query';
 import { axiosInstance } from '../../api/axiosInstance';
-import { ArrowLeft, Briefcase, User, Calendar, DollarSign, Target, Clock, TrendingUp } from 'lucide-react';
+import { ArrowLeft, Briefcase, User, Calendar, IndianRupee, Target, Clock, TrendingUp } from 'lucide-react';
 import { formatCurrency, formatDate } from '../../utils/formatters';
 
 const { Title, Text } = Typography;
@@ -114,7 +114,7 @@ export default function ProjectDetail() {
                             <Descriptions.Item label={<Space><User size={14} /> Manager</Space>}>{project.delivery_manager?.name}</Descriptions.Item>
                             <Descriptions.Item label={<Space><Calendar size={14} /> Start Date</Space>}>{formatDate(project.start_date)}</Descriptions.Item>
                             <Descriptions.Item label={<Space><TrendingUp size={14} /> Billing Type</Space>}>{project.project_type?.replace('_', ' ').toUpperCase()}</Descriptions.Item>
-                            <Descriptions.Item label={<Space><DollarSign size={14} /> Billing Rate</Space>}>{formatCurrency(project.billing_rate)} / hr</Descriptions.Item>
+                            <Descriptions.Item label={<Space><IndianRupee size={14} /> Billing Rate</Space>}>{formatCurrency(project.billing_rate)} / hr</Descriptions.Item>
                         </Descriptions>
                     </Card>
                 </Col>

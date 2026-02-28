@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, Typography, Spin, Row, Col, Table, DatePicker, Tag } from 'antd';
 import { useQuery } from '@tanstack/react-query';
 import { axiosInstance } from '../../api/axiosInstance';
@@ -7,10 +7,13 @@ import { BarChart, Bar, XAxis, YAxis, Tooltip as RechartsTooltip, ResponsiveCont
 import { formatINRCompact } from '../../utils/formatters';
 import { useUiStore } from '../../store/uiStore';
 import { Briefcase, Target, Layers } from 'lucide-react';
+import { tablePagination } from '../../utils/pagination';
 
 const { Title, Text } = Typography;
 
 export default function ProjectDashboard() {
+    const [currentPage, setCurrentPage] = useState(1);
+    const [pageSize, setPageSize] = useState(5);
     const { selectedMonth, setSelectedMonth } = useUiStore();
     const monthStr = selectedMonth.format('YYYY-MM');
 
@@ -152,7 +155,7 @@ export default function ProjectDashboard() {
                             columns={columns}
                             rowKey="id"
                             loading={isLoading}
-                            pagination={{ pageSize: 15 }}
+                            pagination={tablePagination(projects.length, currentPage, pageSize, (page, size) => { setCurrentPage(page); setPageSize(size); })}
                         />
                     </Card>
                 </Col>

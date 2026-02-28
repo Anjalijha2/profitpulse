@@ -2,9 +2,12 @@ import { exportToExcel } from '../utils/excelExporter.js';
 import db from '../models/index.js';
 import { calculateProjectProfitability } from './profitability.service.js';
 import { getEmployeeDashboard, getDepartmentDashboard } from './dashboard.service.js';
+import logger from '../utils/logger.js';
 
 export const generateProjectReport = async (filters) => {
-    const projects = await db.Project.findAll({ where: filters });
+    const { month, ...projectFilters } = filters;
+    logger.info(`Project Report Filters: ${JSON.stringify(projectFilters)}`);
+    const projects = await db.Project.findAll({ where: projectFilters });
 
     const data = await Promise.all(projects.map(async (p) => {
         const prof = await calculateProjectProfitability(p.id);

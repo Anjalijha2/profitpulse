@@ -4,6 +4,7 @@ import { Plus, Edit2, Trash2, UserX } from 'lucide-react';
 import { useState } from 'react';
 import { axiosInstance } from '../../api/axiosInstance';
 import { ROLES } from '../../utils/constants';
+import { tablePagination } from '../../utils/pagination';
 
 const { Title, Text } = Typography;
 
@@ -11,6 +12,8 @@ export default function UserManagement() {
     const queryClient = useQueryClient();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [form] = Form.useForm();
+    const [currentPage, setCurrentPage] = useState(1);
+    const [pageSize, setPageSize] = useState(5);
 
     const { data: response, isLoading } = useQuery({
         queryKey: ['users'],
@@ -141,7 +144,11 @@ export default function UserManagement() {
                     dataSource={Array.isArray(response) ? response : (response?.data?.items || response?.items || [])}
                     rowKey="id"
                     loading={isLoading}
-                    pagination={{ pageSize: 10 }}
+                    pagination={tablePagination(
+                        (Array.isArray(response) ? response : (response?.data?.items || response?.items || [])).length,
+                        currentPage, pageSize,
+                        (page, size) => { setCurrentPage(page); setPageSize(size); }
+                    )}
                 />
             </Card>
 

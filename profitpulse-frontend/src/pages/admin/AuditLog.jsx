@@ -1,13 +1,16 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, Typography, Table, Tag } from 'antd';
 import { ShieldAlert } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { axiosInstance } from '../../api/axiosInstance';
 import dayjs from 'dayjs';
+import { tablePagination } from '../../utils/pagination';
 
 const { Title, Text } = Typography;
 
 export default function AuditLog() {
+    const [currentPage, setCurrentPage] = useState(1);
+    const [pageSize, setPageSize] = useState(5);
     const { data: qData, isLoading } = useQuery({
         queryKey: ['auditLogs'],
         queryFn: async () => {
@@ -39,7 +42,9 @@ export default function AuditLog() {
             </div>
 
             <Card bordered={false} style={{ borderRadius: 'var(--radius-card)', boxShadow: 'var(--shadow-card-default)' }}>
-                <Table columns={columns} dataSource={data} rowKey="id" pagination={{ pageSize: 15 }} loading={isLoading} scroll={{ x: true }} />
+                <Table columns={columns} dataSource={data} rowKey="id"
+                    pagination={tablePagination(data.length, currentPage, pageSize, (page, size) => { setCurrentPage(page); setPageSize(size); })}
+                    loading={isLoading} scroll={{ x: true }} />
             </Card>
         </div>
     );

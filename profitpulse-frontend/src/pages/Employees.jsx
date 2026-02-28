@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Typography, Table, Input, Tag, Select, Button, Drawer } from 'antd';
 import { Search, Eye } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
-import { apiClient } from '../api/client';
+import { axiosInstance } from '../api/axiosInstance';
 
 const { Title, Text } = Typography;
 
@@ -14,7 +14,7 @@ export default function Employees() {
     const { data: response, isLoading } = useQuery({
         queryKey: ['employees'],
         queryFn: async () => {
-            const res = await apiClient.get('/employees');
+            const res = await axiosInstance.get('/employees');
             return res.data;
         }
     });
@@ -71,7 +71,7 @@ export default function Employees() {
         },
     ];
 
-    const employees = response?.data?.items || [];
+    const employees = response || [];
     const filtered = employees.filter(e =>
         e.name?.toLowerCase().includes(searchText.toLowerCase()) ||
         e.employee_code?.toLowerCase().includes(searchText.toLowerCase())

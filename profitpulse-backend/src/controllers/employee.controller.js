@@ -5,7 +5,7 @@ import db from '../models/index.js';
 import { calculateEmployeeProfitability } from '../services/profitability.service.js';
 
 export const listEmployees = asyncHandler(async (req, res) => {
-    const { department_id, is_billable, designation, financial_year, page = 1, limit = 10 } = req.query;
+    const { department_id, is_billable, designation, financial_year, page = 1, limit = 1000 } = req.query;
     const offset = (Number(page) - 1) * Number(limit);
 
     const where = {};
@@ -23,7 +23,8 @@ export const listEmployees = asyncHandler(async (req, res) => {
         where,
         limit: Number(limit),
         offset,
-        include: [{ model: db.Department, as: 'department', attributes: ['name'] }]
+        order: [['createdAt', 'DESC']],
+        include: [{ model: db.Department, as: 'department', attributes: ['id', 'name'] }]
     });
 
     res.status(StatusCodes.OK).json({ success: true, message: 'Employees retrieved', data: rows, meta: { total: count, page: Number(page), limit: Number(limit) } });
@@ -31,7 +32,7 @@ export const listEmployees = asyncHandler(async (req, res) => {
 
 export const getEmployee = asyncHandler(async (req, res) => {
     const employee = await db.Employee.findByPk(req.params.id, {
-        include: [{ model: db.Department, as: 'department', attributes: ['name'] }]
+        include: [{ model: db.Department, as: 'department', attributes: ['id', 'name'] }]
     });
     if (!employee) return res.status(StatusCodes.NOT_FOUND).json({ success: false, message: 'Employee not found' });
 
@@ -105,3 +106,75 @@ export const getEmployeeTimesheetSummary = asyncHandler(async (req, res) => {
         }
     });
 });
+
+export const createEmployee = asyncHandler(async (req, res) => {
+    const data = { ...req.body };
+    if (!data.joining_date) data.joining_date = new Date().toISOString().split('T')[0];
+    if (!data.financial_year) {
+        const now = new Date();
+        const year = now.getFullYear();
+        data.financial_year = now.getMonth() >= 3 ? `${year}-${year + 1}` : `${year - 1}-${year}`;
+    }
+
+    // Unique employee_code check
+    if (data.employee_code) {
+        const existing = await db.Employee.findOne({ where: { employee_code: data.employee_code } });
+        if (existing) {
+            return res.status(StatusCodes.CONFLICT).json({
+                success: false,
+                message: `Employee code '${data.employee_code}' already exists. Please use a unique employee ID.`
+            });
+        }
+    }
+
+    const employee = await db.Employee.create(data);
+    res.status(StatusCodes.CREATED).json({ success: true, message: 'Employee onboarded successfully', data: employee });
+});
+
+export const updateEmployee = asyncHandler(async (req, res) => {
+    const { id } = req.params;
+    const employee = await db.Employee.findByPk(id);
+    if (!employee) {
+        return res.status(StatusCodes.NOT_FOUND).json({ success: false, message: 'Employee not found' });
+    }
+
+    const data = { ...req.body };
+
+    // If employee_code is being changed, check uniqueness
+    if (data.employee_code && data.employee_code !== employee.employee_code) {
+        const existing = await db.Employee.findOne({ where: { employee_code: data.employee_code } });
+        if (existing) {
+            return res.status(StatusCodes.CONFLICT).json({
+                success: false,
+                message: `Employee code '${data.employee_code}' already exists. Please use a unique employee ID.`
+            });
+        }
+    }
+
+    await employee.update(data);
+    const updated = await db.Employee.findByPk(id, {
+        include: [{ model: db.Department, as: 'department', attributes: ['id', 'name'] }]
+    });
+    res.status(StatusCodes.OK).json({ success: true, message: 'Employee updated successfully', data: updated });
+});
+
+export const deleteEmployee = asyncHandler(async (req, res) => {
+    const { id } = req.params;
+    const employee = await db.Employee.findByPk(id);
+    if (!employee) {
+        return res.status(StatusCodes.NOT_FOUND).json({ success: false, message: 'Employee not found' });
+    }
+    // Soft-delete (paranoid: true sets deletedAt, keeps DB record)
+    await employee.destroy();
+    res.status(StatusCodes.OK).json({ success: true, message: `Employee '${employee.name}' has been removed.` });
+});
+
+export const listDepartments = asyncHandler(async (req, res) => {
+    const departments = await db.Department.findAll({ order: [['name', 'ASC']] });
+    console.log(`[API] listDepartments hit. Found ${departments.length} departments.`);
+    res.status(StatusCodes.OK).json({ success: true, data: departments });
+});
+
+
+
+

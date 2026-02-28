@@ -1,37 +1,44 @@
 import { useState } from 'react';
-import { Typography, Table, Input, Select, Button, Drawer, Tag, Row, Col, Card, Space, Form, DatePicker as AntDatePicker, message, InputNumber } from 'antd';
-import { Search, Plus, Download, Eye, Briefcase, CheckCircle2, AlertCircle } from 'lucide-react';
+import { Typography, Table, Input, Select, Button, Drawer, Tag, Row, Col, Card, Space, Form, DatePicker as AntDatePicker, message, InputNumber, Popconfirm, Tooltip } from 'antd';
+import { Search, Plus, Download, Eye, Briefcase, CheckCircle2, AlertCircle, Pencil, Trash2 } from 'lucide-react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { axiosInstance } from '../../api/axiosInstance';
 import { formatINRCompact } from '../../utils/formatters';
 import dayjs from 'dayjs';
 import { useNavigate } from 'react-router-dom';
+import { tablePagination } from '../../utils/pagination';
 
 const { Title, Text } = Typography;
 
 export default function ProjectList() {
     const [searchText, setSearchText] = useState('');
     const [statusFilter, setStatusFilter] = useState(null);
-    const [pagination, setPagination] = useState({ current: 1, pageSize: 15 });
+    const [currentPage, setCurrentPage] = useState(1);
+    const [pageSize, setPageSize] = useState(5);
     const navigate = useNavigate();
     const queryClient = useQueryClient();
     const [form] = Form.useForm();
     const [isDrawerVisible, setIsDrawerVisible] = useState(false);
     const [selectedType, setSelectedType] = useState('tm');
+    const [editingProject, setEditingProject] = useState(null); // null = create, object = edit
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [deletingId, setDeletingId] = useState(null);
 
     const { data: response, isLoading } = useQuery({
-        queryKey: ['projects', pagination.current, pagination.pageSize, searchText, statusFilter],
+        queryKey: ['projects', currentPage, pageSize, searchText, statusFilter],
         queryFn: async () => {
             const params = {
-                page: pagination.current,
-                limit: pagination.pageSize,
+                page: currentPage,
+                limit: pageSize,
                 search: searchText || undefined,
                 status: statusFilter || undefined
             };
             const res = await axiosInstance.get('/projects', { params });
-            return res; // AxiosInstance response interceptor returns response.data
+            // The backend returns { data: rows, meta: { total } }
+            // Interceptor returns the full body
+            return res;
         },
-        keepPreviousData: true
+        placeholderData: (prev) => prev
     });
 
     // Fetch Clients for dropdown
@@ -55,38 +62,60 @@ export default function ProjectList() {
     const createMutation = useMutation({
         mutationFn: (newProject) => axiosInstance.post('/projects', newProject),
         onSuccess: () => {
-            message.success('Project created successfully');
+            message.success(editingProject ? 'Project updated successfully' : 'Project created successfully');
             queryClient.invalidateQueries(['projects']);
             setIsDrawerVisible(false);
+            setEditingProject(null);
             form.resetFields();
         },
         onError: (err) => {
-            message.error(err.response?.data?.message || 'Failed to create project');
+            message.error(err.response?.data?.message || err?.message || 'Failed to process project');
+        }
+    });
+
+    const updateMutation = useMutation({
+        mutationFn: ({ id, payload }) => axiosInstance.put(`/projects/${id}`, payload),
+        onSuccess: () => {
+            message.success('Project updated successfully');
+            queryClient.invalidateQueries(['projects']);
+            setIsDrawerVisible(false);
+            setEditingProject(null);
+            form.resetFields();
+        },
+        onError: (err) => {
+            message.error(err.response?.data?.message || err?.message || 'Failed to update project');
         }
     });
 
     const onFinish = (values) => {
-        // Format dates for backend
+        setIsSubmitting(true);
         const payload = {
             ...values,
             start_date: values.start_date ? values.start_date.format('YYYY-MM-DD') : undefined,
             end_date: values.end_date ? values.end_date.format('YYYY-MM-DD') : undefined,
         };
-        createMutation.mutate(payload);
+        
+        if (editingProject) {
+            updateMutation.mutate({ id: editingProject.id, payload }, {
+                onSettled: () => setIsSubmitting(false)
+            });
+        } else {
+            createMutation.mutate(payload, {
+                onSettled: () => setIsSubmitting(false)
+            });
+        }
     };
 
     const projects = response?.data || [];
     const totalCount = response?.meta?.total || 0;
 
     const stats = {
-        total: totalCount,
-        active: projects.filter(p => p.status === 'active').length, // This will only be for the current page, refine if needed
-        completed: projects.filter(p => p.status === 'completed').length
+        total: response?.meta?.globalTotal ?? 0,
+        active: response?.meta?.activeCount ?? 0,
+        completed: response?.meta?.completedCount ?? 0,
+        cancelled: response?.meta?.cancelledCount ?? 0
     };
 
-    const handleTableChange = (newPagination) => {
-        setPagination(newPagination);
-    };
 
     const columns = [
         {
@@ -125,7 +154,8 @@ export default function ProjectList() {
                 const config = {
                     active: { color: 'success', icon: <CheckCircle2 size={12} style={{ marginRight: 4 }} /> },
                     completed: { color: 'blue', icon: <CheckCircle2 size={12} style={{ marginRight: 4 }} /> },
-                    on_hold: { color: 'warning', icon: <AlertCircle size={12} style={{ marginRight: 4 }} /> }
+                    on_hold: { color: 'warning', icon: <AlertCircle size={12} style={{ marginRight: 4 }} /> },
+                    cancelled: { color: 'error', icon: <AlertCircle size={12} style={{ marginRight: 4 }} /> }
                 };
                 const c = config[status] || { color: 'default', icon: null };
                 return (
@@ -162,34 +192,115 @@ export default function ProjectList() {
         {
             title: 'ACTIONS',
             key: 'action',
-            width: 140,
+            width: 180,
             render: (_, record) => (
-                <Button
-                    type="link"
-                    icon={<Eye size={16} />}
-                    style={{ padding: 0, display: 'inline-flex', alignItems: 'center', gap: 6 }}
-                    onClick={() => navigate(`/projects/${record.id}`)}
-                >
-                    View Details
-                </Button>
+                <Space size={12}>
+                    <Tooltip title="View Details">
+                        <Button
+                            type="text"
+                            icon={<Eye size={16} />}
+                            style={{ color: 'var(--color-primary-action)', padding: 0 }}
+                            onClick={() => navigate(`/projects/${record.id}`)}
+                        />
+                    </Tooltip>
+                    <Tooltip title="Edit Project">
+                        <Button
+                            type="text"
+                            icon={<Pencil size={16} />}
+                            style={{ color: 'var(--color-primary-action)', padding: 0 }}
+                            onClick={() => {
+                                setEditingProject(record);
+                                setSelectedType(record.project_type);
+                                form.setFieldsValue({
+                                    ...record,
+                                    start_date: record.start_date ? dayjs(record.start_date) : null,
+                                    end_date: record.end_date ? dayjs(record.end_date) : null,
+                                });
+                                setIsDrawerVisible(true);
+                            }}
+                        />
+                    </Tooltip>
+                    <Popconfirm
+                        title="Delete Project"
+                        description="Are you sure you want to delete this project? This action can be undone later (soft delete)."
+                        onConfirm={() => handleDelete(record.id)}
+                        okText="Yes"
+                        cancelText="No"
+                        okButtonProps={{ danger: true, loading: deletingId === record.id }}
+                    >
+                        <Tooltip title="Delete Project">
+                            <Button
+                                type="text"
+                                danger
+                                icon={<Trash2 size={16} />}
+                                style={{ padding: 0 }}
+                            />
+                        </Tooltip>
+                    </Popconfirm>
+                </Space>
             )
         },
     ];
 
-    const handleExport = () => {
-        const csvRows = [['Project Code', 'Name', 'Type', 'Status', 'Contract Value', 'Start Date', 'End Date']];
-        filteredProjects.forEach(p => {
-            csvRows.push([p.project_code, p.name, p.project_type, p.status, p.contract_value || '', p.start_date || '', p.end_date || '']);
-        });
-        const csvContent = "data:text/csv;charset=utf-8," + csvRows.map(e => `"${e.join('","')}"`).join("\n");
-        const link = document.createElement("a");
-        link.setAttribute("href", encodeURI(csvContent));
-        link.setAttribute("download", `projects_export_${dayjs().format('YYYYMMDD')}.csv`);
-        document.body.appendChild(link);
-        link.click();
-        setTimeout(() => {
+    const handleDelete = async (id) => {
+        setDeletingId(id);
+        try {
+            await axiosInstance.delete(`/projects/${id}`);
+            message.success('Project deleted successfully');
+            queryClient.invalidateQueries(['projects']);
+        } catch (error) {
+            message.error(error.response?.data?.message || 'Failed to delete project');
+        } finally {
+            setDeletingId(null);
+        }
+    };
+
+    const handleExport = async () => {
+        try {
+            message.loading({ content: 'Preparing export...', key: 'exporting' });
+            // Fetch all matching records without pagination for export
+            const params = {
+                search: searchText || undefined,
+                status: statusFilter || undefined,
+                limit: 2000 // Just fetch everything for CSV
+            };
+            const res = await axiosInstance.get('/projects', { params });
+            const allProjects = res?.data || [];
+            
+            if (allProjects.length === 0) {
+                message.warning({ content: 'No projects to export', key: 'exporting' });
+                return;
+            }
+
+            const header = ['Project Code', 'Name', 'Type', 'Status', 'Client', 'Contract Value', 'Start Date', 'End Date'];
+            const rows = allProjects.map(p => [
+                p.project_code || '',
+                p.name || '',
+                p.project_type || '',
+                p.status || '',
+                p.client?.name || 'Internal',
+                p.contract_value || '',
+                p.start_date || '',
+                p.end_date || ''
+            ]);
+
+            const csvContent = [header, ...rows]
+                .map(e => e.map(val => `"${String(val).replace(/"/g, '""')}"`).join(","))
+                .join("\n");
+
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement("a");
+            const url = URL.createObjectURL(blob);
+            link.setAttribute("href", url);
+            link.setAttribute("download", `projects_export_${dayjs().format('YYYYMMDD')}.csv`);
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
             document.body.removeChild(link);
-        }, 100);
+            message.success({ content: 'Export successful!', key: 'exporting' });
+        } catch (error) {
+            message.error({ content: 'Export failed!', key: 'exporting' });
+        }
     };
 
     return (
@@ -201,12 +312,16 @@ export default function ProjectList() {
                 </div>
                 <Space>
                     <Button icon={<Download size={16} />} onClick={handleExport}>Export</Button>
-                    <Button type="primary" icon={<Plus size={16} />} onClick={() => setIsDrawerVisible(true)}>Create Project</Button>
+                    <Button type="primary" icon={<Plus size={16} />} onClick={() => {
+                        setEditingProject(null);
+                        form.resetFields();
+                        setIsDrawerVisible(true);
+                    }}>Create Project</Button>
                 </Space>
             </div>
 
             <Row gutter={[24, 24]} style={{ marginBottom: 24 }}>
-                <Col xs={24} sm={8}>
+                <Col xs={24} sm={6}>
                     <Card bordered={false} bodyStyle={{ padding: '16px 24px' }} style={{ borderRadius: 12, boxShadow: 'var(--shadow-card-default)', background: 'var(--color-card-bg)' }}>
                         <Text type="secondary" size="small">Total Projects</Text>
                         <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginTop: 4 }}>
@@ -215,21 +330,30 @@ export default function ProjectList() {
                         </div>
                     </Card>
                 </Col>
-                <Col xs={24} sm={8}>
+                <Col xs={24} sm={6}>
                     <Card bordered={false} bodyStyle={{ padding: '16px 24px' }} style={{ borderRadius: 12, boxShadow: 'var(--shadow-card-default)', background: 'var(--color-card-bg)' }}>
-                        <Text type="secondary" size="small">Active Engagements</Text>
+                        <Text type="secondary" size="small">Active</Text>
                         <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginTop: 4 }}>
                             <Title level={3} style={{ margin: 0, color: 'var(--color-profit)' }}>{stats.active}</Title>
                             <Tag color="success" bordered={false} style={{ margin: 0 }}>In Delivery</Tag>
                         </div>
                     </Card>
                 </Col>
-                <Col xs={24} sm={8}>
+                <Col xs={24} sm={6}>
                     <Card bordered={false} bodyStyle={{ padding: '16px 24px' }} style={{ borderRadius: 12, boxShadow: 'var(--shadow-card-default)', background: 'var(--color-card-bg)' }}>
                         <Text type="secondary" size="small">Completed</Text>
                         <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginTop: 4 }}>
                             <Title level={3} style={{ margin: 0, color: 'var(--color-primary-action)' }}>{stats.completed}</Title>
                             <Tag color="blue" bordered={false} style={{ margin: 0 }}>Archived</Tag>
+                        </div>
+                    </Card>
+                </Col>
+                <Col xs={24} sm={6}>
+                    <Card bordered={false} bodyStyle={{ padding: '16px 24px' }} style={{ borderRadius: 12, boxShadow: 'var(--shadow-card-default)', background: 'var(--color-card-bg)' }}>
+                        <Text type="secondary" size="small">Cancelled</Text>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginTop: 4 }}>
+                            <Title level={3} style={{ margin: 0, color: 'var(--color-loss)' }}>{stats.cancelled}</Title>
+                            <Tag color="error" bordered={false} style={{ margin: 0 }}>Discontinued</Tag>
                         </div>
                     </Card>
                 </Col>
@@ -243,7 +367,7 @@ export default function ProjectList() {
                         style={{ maxWidth: 320, borderRadius: 8 }}
                         onChange={(e) => {
                             setSearchText(e.target.value);
-                            setPagination(prev => ({ ...prev, current: 1 }));
+                            setCurrentPage(1);
                         }}
                     />
                     <Select
@@ -252,12 +376,13 @@ export default function ProjectList() {
                         allowClear
                         onChange={(val) => {
                             setStatusFilter(val);
-                            setPagination(prev => ({ ...prev, current: 1 }));
+                            setCurrentPage(1);
                         }}
                     >
                         <Select.Option value="active">Active</Select.Option>
                         <Select.Option value="completed">Completed</Select.Option>
                         <Select.Option value="on_hold">On Hold</Select.Option>
+                        <Select.Option value="cancelled">Cancelled</Select.Option>
                     </Select>
                 </div>
 
@@ -266,23 +391,23 @@ export default function ProjectList() {
                     dataSource={projects}
                     rowKey="id"
                     loading={isLoading}
-                    pagination={{
-                        ...pagination,
-                        total: totalCount,
-                        showSizeChanger: true,
-                        pageSizeOptions: ['10', '15', '20', '50']
-                    }}
-                    onChange={handleTableChange}
+                    pagination={tablePagination(
+                        totalCount,
+                        currentPage,
+                        pageSize,
+                        (page, size) => { setCurrentPage(page); setPageSize(size); }
+                    )}
                     scroll={{ x: 1000 }}
                     style={{ padding: '0 12px' }}
                 />
             </div>
 
             <Drawer
-                title="Register New Engagement"
+                title={editingProject ? `Update Project: ${editingProject.project_code}` : "Register New Engagement"}
                 placement="right"
                 onClose={() => {
                     setIsDrawerVisible(false);
+                    setEditingProject(null);
                     form.resetFields();
                 }}
                 open={isDrawerVisible}
@@ -383,6 +508,19 @@ export default function ProjectList() {
                         </Col>
                     </Row>
 
+                    <Row gutter={16}>
+                        <Col span={24}>
+                            <Form.Item name="status" label="Project Status" rules={[{ required: true }]}>
+                                <Select>
+                                    <Select.Option value="active">Active</Select.Option>
+                                    <Select.Option value="completed">Completed</Select.Option>
+                                    <Select.Option value="on_hold">On Hold</Select.Option>
+                                    <Select.Option value="cancelled">Cancelled</Select.Option>
+                                </Select>
+                            </Form.Item>
+                        </Col>
+                    </Row>
+
                     <div style={{ background: 'rgba(255,255,255,0.03)', padding: 16, borderRadius: 8, marginBottom: 24, border: '1px dashed rgba(255,255,255,0.1)' }}>
                         <Title level={5} style={{ fontSize: 14, marginTop: 0 }}>Contractual Details</Title>
                         {selectedType === 'tm' ? (
@@ -410,12 +548,12 @@ export default function ProjectList() {
                         )}
                     </div>
 
-                    <Space style={{ width: '100%', justifyContent: 'flex-end' }}>
-                        <Button onClick={() => setIsDrawerVisible(false)}>Cancel</Button>
-                        <Button type="primary" htmlType="submit" loading={createMutation.isLoading}>
-                            Register Project
-                        </Button>
-                    </Space>
+                        <Space style={{ width: '100%', justifyContent: 'flex-end' }}>
+                            <Button onClick={() => setIsDrawerVisible(false)}>Cancel</Button>
+                            <Button type="primary" htmlType="submit" loading={isSubmitting}>
+                                {editingProject ? 'Save Changes' : 'Register Project'}
+                            </Button>
+                        </Space>
                 </Form>
             </Drawer>
         </div>

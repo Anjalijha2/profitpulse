@@ -105,5 +105,8 @@ ProfitPulse features a dynamic **Role-Based Access Control** system. Administrat
 ---
 
 ## 📖 Documentation
-Backend API documentation is available at `http://localhost:5000/api-docs` when the server is running.
-Detailed System Requirements (SRD) can be found in `/docs/SRD_ProfitPulse.md`.
+- **API Documentation**: Available at `http://localhost:5000/api-docs` when the server is running.
+- **System Requirements (SRD)**: [SRD_ProfitPulse.md](docs/SRD_ProfitPulse.md)
+- **Testing Management**: [TESTING_MANAGEMENT.md](docs/TESTING_MANAGEMENT.md) - Central hub for test cases, bug tracking, and automation.
+- **Project Walkthrough**: [WALKTHROUGH.md](docs/WALKTHROUGH.md) - Summary of fixes and architecture.
+

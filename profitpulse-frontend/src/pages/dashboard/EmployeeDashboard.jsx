@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, Typography, Spin, Row, Col, Table, DatePicker, Tag } from 'antd';
 import { useQuery } from '@tanstack/react-query';
 import { axiosInstance } from '../../api/axiosInstance';
@@ -6,10 +6,13 @@ import ChartCard from '../../components/common/ChartCard';
 import { BarChart, Bar, XAxis, YAxis, Tooltip as RechartsTooltip, ResponsiveContainer, CartesianGrid, Legend } from 'recharts';
 import { formatCurrency, formatINRCompact } from '../../utils/formatters';
 import { useUiStore } from '../../store/uiStore';
+import { tablePagination } from '../../utils/pagination';
 
 const { Title, Text } = Typography;
 
 export default function EmployeeDashboard() {
+    const [currentPage, setCurrentPage] = useState(1);
+    const [pageSize, setPageSize] = useState(5);
     const { selectedMonth, setSelectedMonth } = useUiStore();
     const monthStr = selectedMonth.format('YYYY-MM');
 
@@ -180,11 +183,7 @@ export default function EmployeeDashboard() {
                             columns={columns}
                             rowKey="id"
                             loading={isLoading}
-                            pagination={{
-                                pageSize: 10,
-                                showTotal: (total) => `Total ${total} employees`,
-                                showSizeChanger: false
-                            }}
+                            pagination={tablePagination(employees.length, currentPage, pageSize, (page, size) => { setCurrentPage(page); setPageSize(size); })}
                         />
                     </Card>
                 </Col>

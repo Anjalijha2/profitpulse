@@ -1,0 +1,14 @@
+{
+  "cookies": [],
+  "origins": [
+    {
+      "origin": "http://localhost:3000",
+      "localStorage": [
+        {
+          "name": "auth-storage",
+          "value": "{\"state\":{\"user\":{\"id\":\"83ade7bb-790c-41e3-880d-0e5dfedf6101\",\"name\":\"Suresh Menon\",\"email\":\"suresh.dm@profitpulse.com\",\"role\":\"delivery_manager\",\"department_id\":\"839d60f1-3f46-4004-8cc2-8d442346ef5c\"},\"token\":\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjgzYWRlN2JiLTc5MGMtNDFlMy04ODBkLTBlNWRmZWRmNjEwMSIsInJvbGUiOiJkZWxpdmVyeV9tYW5hZ2VyIiwiZGVwYXJ0bWVudF9pZCI6IjgzOWQ2MGYxLTNmNDYtNDAwNC04Y2MyLThkNDQyMzQ2ZWY1YyIsImlhdCI6MTc3MjAyMTU0MSwiZXhwIjoxNzcyMTA3OTQxfQ.Rewjf45HlcnNmlmwcvjLF8wKbcNKUOGzAtmNjND12tU\",\"isAuthenticated\":true},\"version\":0}"
+        }
+      ]
+    }
+  ]
+}

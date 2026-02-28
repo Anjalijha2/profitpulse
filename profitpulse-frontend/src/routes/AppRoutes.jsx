@@ -17,6 +17,7 @@ import ProjectList from '../pages/data/ProjectList';
 import ProjectDetail from '../pages/data/ProjectDetail';
 import UploadCenter from '../pages/data/UploadCenter';
 import RevenueList from '../pages/data/RevenueList';
+import ClientList from '../pages/data/ClientList';
 
 import ProtectedRoute from '../components/common/ProtectedRoute';
 import NotFoundPage from '../pages/NotFoundPage';
@@ -72,6 +73,7 @@ export default function AppRoutes() {
             <Route element={<AppLayout />}>
                 {/* Dashboards */}
                 <Route path="/" element={<ProtectedRoute><RootRedirect /></ProtectedRoute>} />
+                <Route path="/dashboard" element={<Navigate to="/" replace />} />
 
                 <Route path="/dashboard/executive" element={
                     <ProtectedRoute requiredScope="dashboard:executive">
@@ -125,6 +127,12 @@ export default function AppRoutes() {
                 <Route path="/projects/:id" element={
                     <ProtectedRoute requiredScope="projects">
                         <ProjectDetail />
+                    </ProtectedRoute>
+                } />
+
+                <Route path="/clients" element={
+                    <ProtectedRoute requiredScope="projects">
+                        <ClientList />
                     </ProtectedRoute>
                 } />
 

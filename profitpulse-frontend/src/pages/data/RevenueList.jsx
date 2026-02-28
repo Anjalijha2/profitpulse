@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { Typography, Table, Input, Button, Row, Col, Card, Tag, Space, Select, DatePicker } from 'antd';
-import { Search, DollarSign, FileText, TrendingUp, Calendar, Building2, Briefcase } from 'lucide-react';
+import { Search, IndianRupee, FileText, TrendingUp, Calendar, Building2, Briefcase } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { axiosInstance } from '../../api/axiosInstance';
 import { formatCurrency, formatINRCompact, formatMonth, formatDate } from '../../utils/formatters';
 import dayjs from 'dayjs';
+import { tablePagination } from '../../utils/pagination';
 
 const { Title, Text } = Typography;
 
@@ -12,6 +13,8 @@ export default function RevenueList() {
     const [searchText, setSearchText] = useState('');
     const [typeFilter, setTypeFilter] = useState(null);
     const [monthFilter, setMonthFilter] = useState(null);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [pageSize, setPageSize] = useState(5);
 
     const { data: qData, isLoading } = useQuery({
         queryKey: ['revenueList'],
@@ -104,7 +107,7 @@ export default function RevenueList() {
                         <Text type="secondary" size="small">Lifetime Realized</Text>
                         <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginTop: 4 }}>
                             <Title level={3} style={{ margin: 0 }}>{formatINRCompact(stats.totalRevenue)}</Title>
-                            <Tag color="success" bordered={false} style={{ margin: 0 }}><DollarSign size={12} /> Total</Tag>
+                            <Tag color="success" bordered={false} style={{ margin: 0 }}><IndianRupee size={12} /> Total</Tag>
                         </div>
                     </Card>
                 </Col>
@@ -134,13 +137,13 @@ export default function RevenueList() {
                         placeholder="Search project or client..."
                         prefix={<Search size={16} style={{ color: 'var(--color-text-muted)' }} />}
                         style={{ maxWidth: 300, borderRadius: 8 }}
-                        onChange={(e) => setSearchText(e.target.value)}
+                        onChange={(e) => { setSearchText(e.target.value); setCurrentPage(1); }}
                     />
                     <Select
                         placeholder="Billing Model"
                         style={{ width: 160 }}
                         allowClear
-                        onChange={setTypeFilter}
+                        onChange={(val) => { setTypeFilter(val); setCurrentPage(1); }}
                     >
                         <Select.Option value="tm">Time & Material</Select.Option>
                         <Select.Option value="fixed_cost">Fixed Cost</Select.Option>
@@ -149,7 +152,7 @@ export default function RevenueList() {
                     <DatePicker
                         picker="month"
                         placeholder="Filter Month"
-                        onChange={(date) => setMonthFilter(date ? date.format('YYYY-MM') : null)}
+                        onChange={(date) => { setMonthFilter(date ? date.format('YYYY-MM') : null); setCurrentPage(1); }}
                     />
                 </div>
 
@@ -158,7 +161,7 @@ export default function RevenueList() {
                     dataSource={filtered}
                     rowKey="id"
                     loading={isLoading}
-                    pagination={{ pageSize: 12, showSizeChanger: true }}
+                    pagination={tablePagination(filtered.length, currentPage, pageSize, (page, size) => { setCurrentPage(page); setPageSize(size); })}
                     scroll={{ x: 1000 }}
                     style={{ padding: '0 12px' }}
                 />

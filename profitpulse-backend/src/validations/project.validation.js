@@ -16,9 +16,10 @@ export const projectValidation = {
         end_date: Joi.date().iso().optional(),
         status: Joi.string().valid(...Object.values(PROJECT_STATUS)).optional(),
         delivery_manager_id: Joi.string().uuid().optional().allow(null),
-    }),
+    }).unknown(true),
 
     updateProject: Joi.object({
+        project_code: Joi.string().max(50).optional(),
         name: Joi.string().max(200).optional(),
         client_id: Joi.string().uuid().optional(),
         project_type: Joi.string().valid(...Object.values(PROJECT_TYPES)).optional(),
@@ -31,5 +32,5 @@ export const projectValidation = {
         end_date: Joi.date().iso().optional(),
         status: Joi.string().valid(...Object.values(PROJECT_STATUS)).optional(),
         delivery_manager_id: Joi.string().uuid().optional().allow(null),
-    }),
+    }).unknown(true),
 };

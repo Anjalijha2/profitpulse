@@ -1,0 +1,14 @@
+{
+  "cookies": [],
+  "origins": [
+    {
+      "origin": "http://localhost:3000",
+      "localStorage": [
+        {
+          "name": "auth-storage",
+          "value": "{\"state\":{\"user\":{\"id\":\"be537461-1eb6-442f-ae22-9402ca2cfd48\",\"name\":\"Anita Desai\",\"email\":\"anita.dh@profitpulse.com\",\"role\":\"department_head\",\"department_id\":\"839d60f1-3f46-4004-8cc2-8d442346ef5c\"},\"token\":\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImJlNTM3NDYxLTFlYjYtNDQyZi1hZTIyLTk0MDJjYTJjZmQ0OCIsInJvbGUiOiJkZXBhcnRtZW50X2hlYWQiLCJkZXBhcnRtZW50X2lkIjoiODM5ZDYwZjEtM2Y0Ni00MDA0LThjYzItOGQ0NDIzNDZlZjVjIiwiaWF0IjoxNzcyMDAzOTg3LCJleHAiOjE3NzIwOTAzODd9.es_rA9fVXYzIdEV5XAFmbAq0FwJKFAxGmkr211eQkKc\",\"isAuthenticated\":true},\"version\":0}"
+        }
+      ]
+    }
+  ]
+}

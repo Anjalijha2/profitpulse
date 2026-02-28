@@ -5,20 +5,33 @@ import { calculateProjectProfitability } from './profitability.service.js';
 const { Op } = pkg;
 
 export const getExecutiveDashboard = async (month, year) => {
-    // Construct full YYYY-MM string from query params.
+    // Construct full YYYY-MM string from query params. 
     const now = new Date();
-    const resolvedYear = year || String(now.getFullYear());
-    const resolvedMonth = month || String(now.getMonth() + 1).padStart(2, '0');
-    const fullMonth = `${resolvedYear}-${resolvedMonth.padStart(2, '0')}`;
+    let resYear, resMonth;
+
+    if (month && month.includes('-')) {
+        [resYear, resMonth] = month.split('-');
+    } else {
+        resYear = year || String(now.getFullYear());
+        resMonth = month || String(now.getMonth() + 1).padStart(2, '0');
+    }
+
+    const fullMonth = `${resYear}-${resMonth.padStart(2, '0')}`;
 
     // --- Preparation ---
     const months = [];
-    const targetDate = new Date(Number(resolvedYear), Number(resolvedMonth) - 1, 1);
+    const targetDate = new Date(Number(resYear), Number(resMonth) - 1, 1);
 
     for (let i = 5; i >= 0; i--) {
         const d = new Date(targetDate);
         d.setMonth(d.getMonth() - i);
-        months.push(`${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`);
+        const mStr = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+        if (!months.includes(mStr)) months.push(mStr);
+    }
+
+    // Ensure fullMonth is always in the months array to prevent undefined dataMap access
+    if (!months.includes(fullMonth)) {
+        months.push(fullMonth);
     }
 
     // 1. Bulk Fetch Configs
@@ -46,42 +59,61 @@ export const getExecutiveDashboard = async (month, year) => {
     ]);
 
     // --- In-Memory Aggregation ---
-    // Structure: dataMap[month][projectId] = { revenue: 0, cost: 0 }
+    // Structure: dataMap[month] = { revenue: 0, cost: 0, billable: 0, non_billable: 0, projectData: { [projectId]: { revenue: 0, cost: 0 } } }
     const dataMap = {};
     months.forEach(m => {
-        dataMap[m] = {};
+        dataMap[m] = {
+            revenue: 0,
+            cost: 0,
+            billable: 0,
+            non_billable: 0,
+            projectData: {}
+        };
         projects.forEach(p => {
-            dataMap[m][p.id] = {
-                revenue: 0,
-                cost: (p.project_type === 'infrastructure' && p.infra_vendor_cost) ? Number(p.infra_vendor_cost) : 0
-            };
+            const pCost = (p.project_type === 'infrastructure' && p.infra_vendor_cost) ? Number(p.infra_vendor_cost) : 0;
+            dataMap[m].projectData[p.id] = { revenue: 0, cost: pCost };
+            dataMap[m].cost += pCost;
         });
     });
 
     revenues.forEach(rev => {
-        if (dataMap[rev.month] && dataMap[rev.month][rev.project_id]) {
-            dataMap[rev.month][rev.project_id].revenue += Number(rev.invoice_amount);
+        if (dataMap[rev.month]) {
+            const amt = Number(rev.invoice_amount);
+            if (dataMap[rev.month].projectData[rev.project_id]) {
+                dataMap[rev.month].projectData[rev.project_id].revenue += amt;
+            }
+            dataMap[rev.month].revenue += amt;
         }
     });
 
     timesheets.forEach(ts => {
-        if (dataMap[ts.month] && dataMap[ts.month][ts.project_id] && ts.employee) {
+        if (dataMap[ts.month] && ts.employee) {
             const costPerHour = formulas.calculateEmployeeCostPerHour(ts.employee.annual_ctc, overhead, standardHours);
-            const cost = formulas.calculateTMCost(costPerHour, Number(ts.billable_hours) + Number(ts.non_billable_hours));
-            dataMap[ts.month][ts.project_id].cost += cost;
+            const b = Number(ts.billable_hours);
+            const nb = Number(ts.non_billable_hours);
+            const cost = formulas.calculateTMCost(costPerHour, b + nb);
+
+            if (dataMap[ts.month].projectData[ts.project_id]) {
+                dataMap[ts.month].projectData[ts.project_id].cost += cost;
+            }
+            dataMap[ts.month].cost += cost;
+            dataMap[ts.month].billable += b;
+            dataMap[ts.month].non_billable += nb;
         }
     });
 
     // --- Calculate KPIs for the Selected Month ---
-    let totalRev = 0;
-    let totalCost = 0;
+    const currStats = dataMap[fullMonth];
+    const totalRev = currStats.revenue;
+    const totalCost = currStats.cost;
+    const totalTime = currStats.billable + currStats.non_billable;
+    const utilization = totalTime > 0 ? (currStats.billable / totalTime) * 100 : 0;
+    const gm = totalRev > 0 ? ((totalRev - totalCost) / totalRev) * 100 : (totalCost > 0 ? -100 : 0);
+
     const projectStats = projects.map(p => {
-        const stats = dataMap[fullMonth][p.id];
+        const stats = currStats.projectData[p.id];
         const profit = stats.revenue - stats.cost;
         const margin = stats.revenue > 0 ? (profit / stats.revenue) * 100 : 0;
-
-        totalRev += stats.revenue;
-        totalCost += stats.cost;
 
         return {
             project_id: p.id,
@@ -99,27 +131,38 @@ export const getExecutiveDashboard = async (month, year) => {
     const top5 = projectStats.slice(0, 5);
     const bottom5 = projectStats.slice(-5).reverse();
 
-    const gm = totalRev > 0 ? ((totalRev - totalCost) / totalRev) * 100 : (totalCost > 0 ? -100 : 0);
+    // --- Calculate Trends & MoM Changes ---
+    const prevMonthIdx = months.indexOf(fullMonth) - 1;
+    const prevMonth = prevMonthIdx >= 0 ? months[prevMonthIdx] : null;
+    const prevStats = prevMonth ? dataMap[prevMonth] : null;
 
-    // --- Calculate Trends ---
+    let trends = { revenue: 0, cost: 0, margin: 0, utilization: 0 };
+
+    if (prevStats) {
+        const pRev = prevStats.revenue;
+        const pCost = prevStats.cost;
+        const pTime = prevStats.billable + prevStats.non_billable;
+        const pUtil = pTime > 0 ? (prevStats.billable / pTime) * 100 : 0;
+        const pGm = pRev > 0 ? ((pRev - pCost) / pRev) * 100 : (pCost > 0 ? -100 : 0);
+
+        trends.revenue = pRev > 0 ? ((totalRev - pRev) / pRev) * 100 : (totalRev > 0 ? 100 : 0);
+        trends.cost = pCost > 0 ? ((totalCost - pCost) / pCost) * 100 : (totalCost > 0 ? 100 : 0);
+        trends.margin = gm - pGm; // absolute point change
+        trends.utilization = utilization - pUtil; // absolute point change
+    }
+
     const trend = months.map(m => {
-        let mRev = 0;
-        let mCost = 0;
+        const stats = dataMap[m];
         const [y, mm] = m.split('-');
         const d = new Date(Number(y), Number(mm) - 1, 1);
         const shortName = d.toLocaleString('default', { month: 'short' });
 
-        projects.forEach(p => {
-            mRev += dataMap[m][p.id].revenue;
-            mCost += dataMap[m][p.id].cost;
-        });
-
         return {
             name: shortName,
             month: m,
-            revenue: Number((mRev / 100000).toFixed(2)), // Lakhs
-            cost: Number((mCost / 100000).toFixed(2)),
-            profit: Number(((mRev - mCost) / 100000).toFixed(2))
+            revenue: Number((stats.revenue / 100000).toFixed(2)), // Lakhs
+            cost: Number((stats.cost / 100000).toFixed(2)),
+            profit: Number(((stats.revenue - stats.cost) / 100000).toFixed(2))
         };
     });
 
@@ -127,7 +170,13 @@ export const getExecutiveDashboard = async (month, year) => {
         total_revenue: totalRev,
         total_cost: totalCost,
         gross_margin_percent: Number(gm.toFixed(2)),
-        utilization_percent: 85.5, // Mocked overall util
+        utilization_percent: Number(utilization.toFixed(2)),
+        trends: {
+            revenue: Number(trends.revenue.toFixed(2)),
+            cost: Number(trends.cost.toFixed(2)),
+            margin: Number(trends.margin.toFixed(2)),
+            utilization: Number(trends.utilization.toFixed(2))
+        },
         top_5_projects: top5,
         bottom_5_projects: bottom5,
         trend

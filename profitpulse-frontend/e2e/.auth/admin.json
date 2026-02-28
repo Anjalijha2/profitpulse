@@ -1,0 +1,14 @@
+{
+  "cookies": [],
+  "origins": [
+    {
+      "origin": "http://localhost:3000",
+      "localStorage": [
+        {
+          "name": "auth-storage",
+          "value": "{\"state\":{\"user\":{\"id\":\"0848e8ab-0e86-4b62-b05f-c6afa9a62f33\",\"name\":\"System Admin\",\"email\":\"admin@profitpulse.com\",\"role\":\"admin\",\"department_id\":null},\"token\":\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjA4NDhlOGFiLTBlODYtNGI2Mi1iMDVmLWM2YWZhOWE2MmYzMyIsInJvbGUiOiJhZG1pbiIsImRlcGFydG1lbnRfaWQiOm51bGwsImlhdCI6MTc3MjAyMTQwNiwiZXhwIjoxNzcyMTA3ODA2fQ.PvNRlwQFRt-Ew2FHQ74NTvWJcTAY1GmWO5rlNbqfe64\",\"isAuthenticated\":true},\"version\":0}"
+        }
+      ]
+    }
+  ]
+}
