@@ -34,69 +34,70 @@ export default function LoginPage() {
             <WaveCanvas />
 
             <style>{`
-                /* Glassmorphism Inputs */
+                /* Clean Inputs */
                 .pp-glass-input.ant-input,
                 .pp-glass-input.ant-input-affix-wrapper {
-                    background: rgba(255, 255, 255, 0.08) !important;
-                    border: 1px solid rgba(255, 255, 255, 0.15) !important;
-                    border-radius: 12px !important;
+                    background: #FFFFFF !important;
+                    border: 1px solid rgba(4, 2, 34, 0.15) !important;
+                    border-radius: 8px !important;
                     height: 52px !important;
                     font-size: 15px !important;
-                    color: #FFFFFF !important;
+                    color: #040222 !important;
                     transition: border-color 0.2s, box-shadow 0.2s, background 0.2s !important;
                 }
                 .pp-glass-input.ant-input-affix-wrapper:hover,
                 .pp-glass-input.ant-input-affix-wrapper-focused {
-                    background: rgba(255, 255, 255, 0.12) !important;
-                    border-color: rgba(34, 211, 238, 0.5) !important;
-                    box-shadow: 0 0 0 3px rgba(34, 211, 238, 0.15) !important;
+                    background: #FFFFFF !important;
+                    border-color: #F11A10 !important;
+                    box-shadow: 0 0 0 3px rgba(241, 26, 16, 0.15) !important;
                 }
                 .pp-glass-input .ant-input {
                     background: transparent !important;
                     border: none !important;
                     box-shadow: none !important;
                     height: auto !important;
-                    color: #FFFFFF !important;
+                    color: #040222 !important;
                 }
                 .pp-glass-input .ant-input::placeholder {
-                    color: rgba(255, 255, 255, 0.4) !important;
+                    color: #6B7280 !important;
                 }
 
                 /* Override Checkbox Text Color */
                 .ant-checkbox-wrapper {
-                    color: #E2E8F0 !important;
+                    color: #212529 !important;
                 }
                 .ant-checkbox-inner {
-                    background-color: rgba(255,255,255,0.1) !important;
-                    border-color: rgba(255,255,255,0.3) !important;
+                    background-color: #FFFFFF !important;
+                    border-color: rgba(4, 2, 34, 0.3) !important;
                 }
                 .ant-checkbox-checked .ant-checkbox-inner {
-                    background-color: #22D3EE !important;
-                    border-color: #22D3EE !important;
+                    background-color: #F11A10 !important;
+                    border-color: #F11A10 !important;
                 }
 
-                /* Glow Button */
+                /* Primary Button */
                 .pp-glow-btn {
-                    background: linear-gradient(135deg, #06B6D4, #3B82F6) !important;
+                    background: #F11A10 !important;
                     border: none !important;
-                    border-radius: 12px !important;
+                    border-radius: 8px !important;
                     height: 52px !important;
                     font-size: 16px !important;
                     font-weight: 600 !important;
                     letter-spacing: 0.02em !important;
                     color: white !important;
-                    box-shadow: 0 4px 20px rgba(6, 182, 212, 0.4) !important;
-                    transition: transform 0.2s, box-shadow 0.2s !important;
+                    box-shadow: 0 4px 14px rgba(241, 26, 16, 0.3) !important;
+                    transition: transform 0.2s, box-shadow 0.2s, background 0.2s !important;
                 }
                 .pp-glow-btn:hover {
                     transform: translateY(-2px) !important;
-                    box-shadow: 0 6px 28px rgba(6, 182, 212, 0.6) !important;
+                    box-shadow: 0 6px 20px rgba(241, 26, 16, 0.4) !important;
+                    background: #D1170D !important;
                 }
                 .pp-glow-btn:active {
                     transform: translateY(0) !important;
                 }
                 
-                /* Glass Panel Animation */
+                /* Modal Animation */
                 @keyframes floatIn {
                     from { opacity: 0; transform: scale(0.96) translateY(20px); }
                     to { opacity: 1; transform: scale(1) translateY(0); }
@@ -105,10 +106,10 @@ export default function LoginPage() {
 
             {/* 2. Top-Left Logo (Optional, looks nice outside the modal) */}
             <div style={{ position: 'absolute', top: 40, left: 48, zIndex: 20 }}>
-                <ProfitPulseLogo size={42} dark />
+                <ProfitPulseLogo size={42} />
             </div>
 
-            {/* 3. Centered Glassmorphism Modal */}
+            {/* 3. Centered Clean Modal */}
             <div style={{
                 position: 'relative',
                 zIndex: 10,
@@ -122,13 +123,11 @@ export default function LoginPage() {
                     width: '100%',
                     maxWidth: 440,
                     padding: '48px',
-                    // Super premium glassmorphism
-                    background: 'rgba(11, 20, 48, 0.45)',
-                    backdropFilter: 'blur(24px)',
-                    WebkitBackdropFilter: 'blur(24px)', // Safari support
-                    border: '1px solid rgba(255, 255, 255, 0.1)',
-                    borderRadius: '24px',
-                    boxShadow: '0 30px 60px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255,255,255,0.15)',
+                    // Clean white card
+                    background: '#FFFFFF',
+                    border: '1px solid rgba(4, 2, 34, 0.08)',
+                    borderRadius: '16px',
+                    boxShadow: '0 12px 40px rgba(4, 2, 34, 0.06)',
                     animation: 'floatIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards'
                 }}>
 
@@ -136,20 +135,19 @@ export default function LoginPage() {
                         <div style={{
                             width: 56, height: 56,
                             margin: '0 auto 20px',
-                            background: 'rgba(255,255,255,0.08)',
-                            border: '1px solid rgba(255,255,255,0.15)',
-                            borderRadius: '16px',
+                            background: '#FAF5FF',
+                            border: '1px solid rgba(4, 2, 34, 0.08)',
+                            borderRadius: '12px',
                             display: 'flex', alignItems: 'center', justifyContent: 'center',
-                            boxShadow: '0 8px 32px rgba(34, 211, 238, 0.2)'
                         }}>
                             {/* Small icon version of logo inside modal */}
-                            <ProfitPulseLogo size={28} showText={false} dark />
+                            <ProfitPulseLogo size={28} showText={false} />
                         </div>
 
-                        <h1 style={{ margin: '0 0 8px', fontSize: 28, fontWeight: 700, color: '#FFFFFF', letterSpacing: '-0.02em' }}>
+                        <h1 style={{ margin: '0 0 8px', fontSize: 28, fontWeight: 700, color: '#040222', letterSpacing: '-0.02em' }}>
                             Welcome back
                         </h1>
-                        <p style={{ margin: 0, fontSize: 15, color: 'rgba(255, 255, 255, 0.6)' }}>
+                        <p style={{ margin: 0, fontSize: 15, color: '#6B7280' }}>
                             Sign in to your intelligent dashboard
                         </p>
                     </div>
@@ -161,10 +159,10 @@ export default function LoginPage() {
                             showIcon
                             style={{
                                 marginBottom: 24,
-                                borderRadius: 12,
-                                background: 'rgba(239, 68, 68, 0.15)',
-                                border: '1px solid rgba(239, 68, 68, 0.3)',
-                                color: '#FECACA'
+                                borderRadius: 8,
+                                background: 'rgba(239, 68, 68, 0.1)',
+                                border: '1px solid rgba(239, 68, 68, 0.2)',
+                                color: '#EF4444'
                             }}
                         />
                     )}
@@ -190,7 +188,7 @@ export default function LoginPage() {
                         >
                             <Input
                                 className="pp-glass-input"
-                                prefix={<MailOutlined style={{ color: 'rgba(255, 255, 255, 0.4)', fontSize: 18, marginRight: 8 }} />}
+                                prefix={<MailOutlined style={{ color: '#6B7280', fontSize: 18, marginRight: 8 }} />}
                                 placeholder="Email address"
                             />
                         </Form.Item>
@@ -202,10 +200,10 @@ export default function LoginPage() {
                         >
                             <Input.Password
                                 className="pp-glass-input"
-                                prefix={<LockOutlined style={{ color: 'rgba(255, 255, 255, 0.4)', fontSize: 18, marginRight: 8 }} />}
+                                prefix={<LockOutlined style={{ color: '#6B7280', fontSize: 18, marginRight: 8 }} />}
                                 iconRender={(v) => v
-                                    ? <EyeTwoTone twoToneColor="rgba(255, 255, 255, 0.6)" />
-                                    : <EyeInvisibleOutlined style={{ color: 'rgba(255, 255, 255, 0.4)' }} />
+                                    ? <EyeTwoTone twoToneColor="#6B7280" />
+                                    : <EyeInvisibleOutlined style={{ color: '#6B7280' }} />
                                 }
                                 placeholder="Password"
                             />
@@ -215,9 +213,9 @@ export default function LoginPage() {
                             <Form.Item name="remember" valuePropName="checked" noStyle>
                                 <Checkbox>Remember me</Checkbox>
                             </Form.Item>
-                            <a href="#" style={{ color: '#22D3EE', fontSize: 14, fontWeight: 500, textDecoration: 'none', transition: 'text-shadow 0.2s' }}
-                                onMouseEnter={(e) => e.target.style.textShadow = '0 0 8px rgba(34, 211, 238, 0.6)'}
-                                onMouseLeave={(e) => e.target.style.textShadow = 'none'}>
+                            <a href="#" style={{ color: '#F11A10', fontSize: 14, fontWeight: 500, textDecoration: 'none', transition: 'color 0.2s' }}
+                                onMouseEnter={(e) => e.target.style.color = '#D1170D'}
+                                onMouseLeave={(e) => e.target.style.color = '#F11A10'}>
                                 Forgot password?
                             </a>
                         </div>
@@ -238,7 +236,7 @@ export default function LoginPage() {
             </div>
 
             {/* Footer fixed at bottom center */}
-            <div style={{ position: 'absolute', bottom: 24, width: '100%', textAlign: 'center', zIndex: 10, fontSize: 13, color: 'rgba(255, 255, 255, 0.3)' }}>
+            <div style={{ position: 'absolute', bottom: 24, width: '100%', textAlign: 'center', zIndex: 10, fontSize: 13, color: '#6B7280' }}>
                 © 2026 ProfitPulse  •  Confidential Access Region
             </div>
 

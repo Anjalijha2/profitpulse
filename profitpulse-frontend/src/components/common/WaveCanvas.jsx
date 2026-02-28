@@ -21,25 +21,25 @@ export default function WaveCanvas() {
         window.addEventListener('resize', setCanvasSize);
         setCanvasSize();
 
-        // Finely tuned waves matching the steep, repeating neon peaks
+        // Red/Navy theme waves
         const waves = [
             {
-                // Background deep blue/purple wave
-                color: [40, 80, 255],
+                // Background Light Blue wave
+                color: [219, 240, 255],
                 baseYOffset: 0.55,
                 thickness: 400,
-                opacity: 0.25,
+                opacity: 0.8,
                 components: [
                     { amplitude: 120, frequency: 0.006, speed: 0.005 },
                     { amplitude: 60, frequency: 0.015, speed: -0.010 }
                 ]
             },
             {
-                // Middle vibrant purple/magenta wave
-                color: [160, 30, 255],
+                // Middle Navy wave
+                color: [4, 2, 34],
                 baseYOffset: 0.60,
                 thickness: 350,
-                opacity: 0.35,
+                opacity: 0.1,
                 components: [
                     { amplitude: 150, frequency: 0.008, speed: 0.008 },
                     { amplitude: 80, frequency: 0.018, speed: -0.012 },
@@ -47,11 +47,11 @@ export default function WaveCanvas() {
                 ]
             },
             {
-                // Foreground bright cyan/teal wave
-                color: [10, 230, 255],
+                // Foreground Red wave
+                color: [241, 26, 16],
                 baseYOffset: 0.45,
                 thickness: 250,
-                opacity: 0.45,
+                opacity: 0.6,
                 components: [
                     { amplitude: 140, frequency: 0.009, speed: 0.007 },
                     { amplitude: 90, frequency: 0.020, speed: -0.014 },
@@ -61,11 +61,11 @@ export default function WaveCanvas() {
         ];
 
         // Fill entire screen with dust particles
-        const particles = Array.from({ length: 80 }).map(() => ({
+        const particles = Array.from({ length: 40 }).map(() => ({
             x: Math.random(),
             y: Math.random(),
             radius: Math.random() * 1.5 + 0.5,
-            opacity: Math.random() * 0.5 + 0.1,
+            opacity: Math.random() * 0.3 + 0.1,
             speedX: (Math.random() - 0.5) * 0.2,
             speedY: (Math.random() - 0.5) * 0.2,
         }));
@@ -74,11 +74,11 @@ export default function WaveCanvas() {
             const w = canvas.width / (window.devicePixelRatio || 1);
             const h = canvas.height / (window.devicePixelRatio || 1);
 
-            // True deep dark background
+            // Light clean background
             ctx.globalCompositeOperation = 'source-over';
             const bg = ctx.createLinearGradient(0, 0, 0, h);
-            bg.addColorStop(0, '#060B19'); // Dark navy
-            bg.addColorStop(1, '#02040A'); // Near black
+            bg.addColorStop(0, '#FFFFFF'); // White
+            bg.addColorStop(1, '#F6F6F6'); // Light Gray
             ctx.fillStyle = bg;
             ctx.fillRect(0, 0, w, h);
 
@@ -90,12 +90,12 @@ export default function WaveCanvas() {
                 if (p.y < 0) p.y = 1; if (p.y > 1) p.y = 0;
                 ctx.beginPath();
                 ctx.arc(p.x * w, p.y * h, p.radius, 0, Math.PI * 2);
-                ctx.fillStyle = `rgba(100, 230, 255, ${p.opacity})`;
+                ctx.fillStyle = `rgba(241, 26, 16, ${p.opacity})`;
                 ctx.fill();
             });
 
-            // Additive neon blending
-            ctx.globalCompositeOperation = 'screen';
+            // Multiply blending for light theme
+            ctx.globalCompositeOperation = 'multiply';
 
             waves.forEach((wave) => {
                 const { color, baseYOffset, thickness, opacity, components } = wave;
@@ -127,24 +127,14 @@ export default function WaveCanvas() {
                 ctx.fillStyle = fillGrad;
                 ctx.fill();
 
-                // Outer Glow
+                // Soft Outline
                 ctx.beginPath();
                 ctx.moveTo(pts[0].x, pts[0].y);
                 for (let i = 1; i < pts.length; i++) ctx.lineTo(pts[i].x, pts[i].y);
-                ctx.strokeStyle = `rgba(${color[0]},${color[1]},${color[2]},0.15)`;
-                ctx.lineWidth = 24;
+                ctx.strokeStyle = `rgba(${color[0]},${color[1]},${color[2]},0.5)`;
+                ctx.lineWidth = 1;
                 ctx.lineCap = 'round';
                 ctx.lineJoin = 'round';
-                ctx.stroke();
-
-                // Inner Glow
-                ctx.strokeStyle = `rgba(${color[0]},${color[1]},${color[2]},0.4)`;
-                ctx.lineWidth = 8;
-                ctx.stroke();
-
-                // Sharp Core Line
-                ctx.strokeStyle = `rgba(${color[0]},${color[1]},${color[2]},0.95)`;
-                ctx.lineWidth = 2.5;
                 ctx.stroke();
             });
 

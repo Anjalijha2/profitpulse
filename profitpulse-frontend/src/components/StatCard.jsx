@@ -23,7 +23,7 @@ export default function StatCard({ title, value, prefix = '', suffix = '', trend
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 16 }}>
                 <Text style={{ color: '#6b7280', fontSize: 14, fontWeight: 500 }}>{title}</Text>
                 {icon && (
-                    <div style={{ width: 40, height: 40, borderRadius: 8, background: '#f3f4f6', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#6366f1' }}>
+                    <div style={{ width: 40, height: 40, borderRadius: 8, background: '#FAF5FF', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#F11A10' }}>
                         {icon}
                     </div>
                 )}
